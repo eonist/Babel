@@ -100,21 +100,60 @@ languages = ["Spanish", "French", "German"]  # Modify as needed
 }
 ```
 
+### Localizations.strings format: 
+
+```
+"hello_world_key" = "Hello, World!";
+"greeting_key" = "Welcome to our app!";
+"farewell_key" = "Thank you for using our app!";
+```
+
+Will generate the following files:
+
+#### `Localization-Spanish.strings`
+
+```plaintext:Localization-Spanish.strings
+"hello_world_key" = "¡Hola, Mundo!";
+"another_key" = "Otro valor";
+```
+
+#### `Localization-French.strings`
+
+```plaintext:Localization-French.strings
+"hello_world_key" = "Bonjour, le monde !";
+"another_key" = "Une autre valeur";
+```
+
+#### `Localization-German.strings`
+
+```plaintext:Localization-German.strings
+"hello_world_key" = "Hallo, Welt!";
+"another_key" = "Ein weiterer Wert";
+```
+
+
 ### Installation:
 
 1. Fork github.com/eonist/Babel to your own github user / org
-2. Store your secrets in the repo settings: OPENAI_API_KEY, GITHUB_SECRET, SLACK_SECRET
+2. Store your secrets in the repo settings: OPENAI_API_KEY, ~GITHUB_TOKEN~, SLACK_WEBHOOK_URL
 3. Add the spm package to your app project: `github.com/username/Babel` in your package or xcode project
 
 ### Obtain secrets:
 
 - OpenAI -> admin.openai.com/api-secrets
 - Slack -> slack.com/settings/token
-- Github -> Github.com/username/reponame/settings/token
+- Github -> ~Github.com/username/reponame/settings/token~ (this is auto created in GA)
 
 ### Gotchas: 
 
 - Ensure that the Localizable.strings file exists in the root directory of your repository or adjust the path accordingly.
+- Hardcode the openai key if you want to test things quickly: and add back ${{ secrets.OPENAI_API_KEY }} when needed. (Remember to reset the key or wipe git hist after)
+- Localization files are added to root/.lproj/Localizations.strings in packages
+
+Resources/en.lproj/Localizable.strings
+Resources/gr.lproj/Localizable.strings
+Resources/fr.lproj/Localizable.strings
+Resources/es.lproj/Localizable.strings
 
 ### Todo: 
 

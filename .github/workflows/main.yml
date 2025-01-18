@@ -16,24 +16,25 @@ jobs:
     secrets: inherit
     
   ## send open ai data
-  call_send_data:
+  call_translate_strings:
     needs: call_read_content
     runs-on: ubuntu-latest
-     ## Send open_ai content and prompt instructions: content, languages, model to use (default is gpt4)
-     uses: ./.github/workflows/send_openai.yml
-     with:
-       input1: "${{ needs.call_read_content.outputs.content }}" 
-       ## return and use the result from openAI, json-content, and tokens_used_in_the_job
-
-  ## write content to files and commit & push (array of texts) and (language_codes_array)
-  job3:
-    ## pass the value to the file writer
-    uses: ./.github/workflows/write_content.yml
+    uses: ./.github/workflows/send_openai.yml
     with:
-      input2: ...
+      content: "${{ needs.call_read_content.outputs.content }}"
+      languages: ["es", "fr"]
+      gpt_model: "gpt-4"
+      general_instruction: "Please ensure the translations are accurate and contextually appropriate."
 
+ 
+  ## write content to files and commit & push (array of texts) and (language_codes_array)
+  process_translations:
+    needs: call_translate_strings
+    uses: ./.github/workflows/write_content.yml
+    runs-on: ubuntu-latest
+  
   ## Unit tests
-  job4:
+  Swift_Package_CI:
     ## run the package unit test
     uses: ./.github/workflows/unit_test.yml
     with:

@@ -58,7 +58,7 @@ jobs:
         ## Upload translation results
         - name: Upload translations as artifact
             id: upload-translations
-            uses: actions/upload-artifact@v3
+            uses: actions/upload-artifact@v3/
             with:
             name: translations
             path: translations.json

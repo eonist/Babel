@@ -3,21 +3,20 @@
 
 name: Swift Package CI
 
-## we dont need input for this test so remove it
 on:
-    workflow_call:
-      inputs:
-        input1:
-          required: true
-          type: string
+  workflow_call:
+    outputs:
+      success:
+        description: 'Whether the workflow completed successfully'
+        value: ${{ jobs.build-and-test.conclusion == 'success' }}
 
 jobs:
   build-and-test:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build
-      run: swift build
-    - name: Run tests
-      run: swift test
+      - uses: actions/checkout@v2
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
