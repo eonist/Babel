@@ -22,7 +22,7 @@ Bable is a swift Package that you can load `localised.string` into your swift pr
 
 - BYO openai-key (pick your own model)
 - Free and Opensource
-- Setup in less than a minute (1. Fork it, 2. Add openai-key, 3. Load SPM Package)
+- Setup in less than a minute (1. Fork it, 2. Add secrets to prefs, 3. Load SPM Package)
 - Override throny parts with translation interpolation
 - Translate to 1 or 100 languages
 - Dirt cheap. Pay as you go. In most cases near free
@@ -103,13 +103,21 @@ languages = ["Spanish", "French", "German"]  # Modify as needed
 ### Installation:
 
 1. Fork github.com/eonist/Babel to your own github user / org
-2. Store the your openai-key with the name: MY_SECRET in your repository settings.
+2. Store your secrets in the repo settings: OPENAI_API_KEY, GITHUB_SECRET, SLACK_SECRET
 3. Add the spm package to your app project: `github.com/username/Babel` in your package or xcode project
 
+### Obtain secrets:
+
+- OpenAI -> admin.openai.com/api-secrets
+- Slack -> slack.com/settings/token
+- Github -> Github.com/username/reponame/settings/token
+
 ### Gotchas: 
+
 - Ensure that the Localizable.strings file exists in the root directory of your repository or adjust the path accordingly.
 
 ### Todo: 
+
 - Add badge for platforms: WatchOS, iOS, VisionOS, MacOS
 - Add unit-tests
 - Add apples AI language translation kit to the unit tests, to double check language consistancy.

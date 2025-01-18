@@ -11,40 +11,55 @@ name: Translate Localizable.strings
 on:
     workflow_call:
       inputs:
-        input1:
+        content:
           required: true
           type: string
+        languages:
+          required: true
+          type: string
+        gpt_model:
+          required: false
+          type: string
+          default: "gpt-4"
+        general_instruction:
+          required: false
+          type: string
+          default: ""
 
 jobs:
-  translate_strings:
-    runs-on: ubuntu-latest
-    steps:
-      ## Checkout the repository to access the files
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      ## Set up Python
-      - name: Set up Python 3
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      ## Install Python dependencies
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install openai
-
-      ## Run the translation script
-      - name: Translate strings using OpenAI API
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          python scripts/translate_strings.py
-
-      ## Upload translation results (optional)
-      - name: Upload translations as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: translations
-          path: translations.json
+    translate_strings:
+        runs-on: ubuntu-latest
+        outputs:
+        translations-path: ${{ steps.upload-translations.outputs.artifact-path }}
+        steps:
+        ## Checkout the repository to access the files
+        - name: Checkout repository
+            uses: actions/checkout@v3
+    
+        ## Set up Python
+        - name: Set up Python 3
+            uses: actions/setup-python@v4
+            with:
+            python-version: '3.x'
+    
+        ## Install Python dependencies
+        - name: Install dependencies
+            run: |
+            python -m pip install --upgrade pip
+            pip install openai
+    
+        ## Run the translation script
+        - name: Translate strings using OpenAI API
+            env:
+            OPENAI_API_KEY: "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"
+            run: |
+            python scripts/translate_strings.py --content "${{ inputs.content }}" --languages "${{ inputs.languages }}" --model "${{ inputs.gpt_model }}" --instruction "${{ inputs.general_instruction }}"
+    
+        ## Upload translation results
+        - name: Upload translations as artifact
+            id: upload-translations
+            uses: actions/upload-artifact@v3
+            with:
+            name: translations
+            path: translations.json
+ 

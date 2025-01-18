@@ -1,23 +1,30 @@
 name: Main Workflow
-on: [push, pull_request]
+on: [push] ##, pull_request
 
+name: Caller Workflow
+
+on:
+  push:
+ 
 jobs:
   ## Read data from a file
-  job1:
+  ## And get a value back from the read_content.yml
+  call_read_content:
     uses: ./.github/workflows/read_content.yml
     with:
       input1: "Localizable.strings"
-    ## I need to get a value back from the read_content.yml
-
+    secrets: inherit
+    
   ## send open ai data
-  job2:
-    ## Send open_ai content and prompt instructions: content, languages, model to use (default is gpt4)
-    uses: ./.github/workflows/send_openai.yml
-    with:
-      input2: ...
-      ## return and use the result from openAI, json-content, and tokens_used_in_the_job
-  
- 
+  call_send_data:
+    needs: call_read_content
+    runs-on: ubuntu-latest
+     ## Send open_ai content and prompt instructions: content, languages, model to use (default is gpt4)
+     uses: ./.github/workflows/send_openai.yml
+     with:
+       input1: "${{ needs.call_read_content.outputs.content }}" 
+       ## return and use the result from openAI, json-content, and tokens_used_in_the_job
+
   ## write content to files and commit & push (array of texts) and (language_codes_array)
   job3:
     ## pass the value to the file writer
