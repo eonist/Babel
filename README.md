@@ -1,14 +1,14 @@
 # Babel
 
-Automatic AI language localisation
+> Automatic AI language localisation
 
 ### Description:
 
-Bable is a swift Package that you can load localised.string into your swift project. Babel translates to the desired languages via github actions. Translations are handled automatically with your own open-ai key, everytime you change localisation.strings in your babel fork.
+Bable is a swift Package that you can load `localised.string` into your swift project. Babel translates to the desired languages via github actions. Translations are handled automatically with your own open-ai key, everytime you change `localisation.strings` in your babel fork.
 
 ### Problem: 
 
-1. Ensuring consistensy in your localisation.strings files for every language is a pain
+1. Ensuring consistensy in your `localisation.strings` files for every language is a pain
 2. Manually converting languages in .strings files one by one with chatgpt is labourious
 3. Language translations should be collaborative. But are stuck in the main project files. 
 
