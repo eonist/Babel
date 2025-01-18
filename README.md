@@ -4,31 +4,34 @@
 
 ### Description:
 
-Bable is a swift Package that you can load `localised.string` into your swift project. Babel translates to the desired languages via github actions. Translations are handled automatically with your own open-ai key, everytime you change `localisation.strings` in your babel fork.
+Babel translates to the desired languages via github actions. Translations are handled automatically with your own open-ai api key, everytime you change `Localizable.strings` in your babel fork. Slack gets notified on completion. And your app loads the latest localisations automaticall via SPM if you setup periodical daily release. 
 
 ### Problem: 
 
-1. Ensuring consistensy in your `localisation.strings` files for every language is a pain
-2. Manually converting languages in .strings files one by one with chatgpt is labourious
-3. Language translations should be collaborative. But are stuck in the main project files. 
+1. Translating your `Localizable.strings` into every language is a pain
+2. Manual processes are error prone. And time consuming.
+3. Only devs can ensure pipeline works when new translations are needed (often) 
 
 ### Solution:
 
-1. Pick the latest AI models from AI. from gpt3.5 to o1 and beyond. 
-2. Let Ai do what is meant to do. Aleviate reptetive time consuming tasks.
-3. Since Babel live in its own fork. Even non devs can edit clear text and hit the commit button. 
+1. Use the power of OpenAI models, from gpt3.5 to o1 and beyond to auto translate 1 or 100s of languages at scale.
+2. General language Unit-tests are included and makes sure translations are reliable. Get notified on slack if the translations succeeded or failed. And block deploys. 
+3. Since Babel live in its own fork. Even non devs can edit clear text and hit the commit button. And babel takes care of the rest. This requires that you have setup auto deploying for the app-store etc. 
 
 ### Features:
 
-- BYO openai-key (pick your own model)
-- Free and Opensource
-- Setup in less than a minute (1. Fork it, 2. Add secrets to prefs, 3. Load SPM Package)
-- Override throny parts with translation interpolation
-- Translate to 1 or 100 languages
-- Dirt cheap. Pay as you go. In most cases near free
-- Keep the package public or private. Public is great for community feedback on translations
-- Publishes translation cost, and other tidbits to your desired slack channel
-- Babel also runs automatic unit-tests to make sure all languages are correct
+- Bring your own Open-ai key
+- Trigger translations on push
+- Token based pricing. (First $5 is on OpenAI)
+- Supports all languages (1..100s)
+- Unit-tests built in
+- Slack notification on complete
+
+### Installation:
+
+1. Fork `https://github.com/eonist/Babel` to your own github user / org
+2. Obtain and add OPENAI_API_KEY, SLACK_WEBHOOK_URL in your repo-settings: 
+3. Add the SPM package to your app project: `https://github.com/username/Babel` in your package or xcode project
 
 ### Example:
 
@@ -37,129 +40,81 @@ Bable is a swift Package that you can load `localised.string` into your swift pr
 import Babel
 
 #Preview {
-  Text("your.string.key", bundle: .module) // use your babel translations
-    .environment(\.locale, Locale(identifier: "es") // shows Spanish translation
+    Text("greeting_key", bundle: .module) // use your babel translations
+        .environment(\.locale, Locale(identifier: "en") // shows English translation
+    Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
+    Text("hello_world_key".localized()) // use your babel translations
+        .environment(\.locale, Locale(identifier: "ge") // shows German translation
 }
 ```
 
-**Your localisation.strings file:**
+**Your main localisation.strings file:**
+`Resources/en.lproj/Localizable.strings`
+
+**with content:**
 ```
 "hello_world_key" = "Hello, World!";
 "greeting_key" = "Welcome to our app!";
 "farewell_key" = "Thank you for using our app!";
 ```
 
-### Languages:
-Add desired languages to the .github/workflows/main.yml file:
+Add desired languages to the `.github/workflows/main.yml` file:
 ```yml
-languages = ["Spanish", "French", "German"]  # Modify as needed
+languages = ["es", "fr", "gr"] # Modify as needed "Spanish", "French", "German"
 ```
 
-### OpenAI prompt: 
-
-```swift
-  prompt = f"""
-  Translate the following content to languages: {', '.join(languages)}.
-  Return the translations in JSON dict format with language as key and value as an array of key-value pairs.
-  Each key-value pair should correspond to the original keys and their translated values.
-
-  The content format is lines like: "hello_world_key" = "Hello, World!";
-
-  Content:
-  {content}
-  """
+**Output on translation complete**
 ```
-
-### Translation json from OpenAI:
-```json
-{
-  "Spanish": [
-    {
-      "hello_world_key": "¡Hola, Mundo!"
-    },
-    {
-      "another_key": "Otro valor"
-    }
-  ],
-  "French": [
-    {
-      "hello_world_key": "Bonjour, le monde !"
-    },
-    {
-      "another_key": "Une autre valeur"
-    }
-  ],
-  "German": [
-    {
-      "hello_world_key": "Hallo, Welt!"
-    },
-    {
-      "another_key": "Ein weiterer Wert"
-    }
-  ]
-}
-```
-
-### Localizations.strings format: 
-
-```
-"hello_world_key" = "Hello, World!";
-"greeting_key" = "Welcome to our app!";
-"farewell_key" = "Thank you for using our app!";
-```
-
-Will generate the following files:
-
-#### `Localization-Spanish.strings`
-
-```plaintext:Localization-Spanish.strings
-"hello_world_key" = "¡Hola, Mundo!";
-"another_key" = "Otro valor";
-```
-
-#### `Localization-French.strings`
-
-```plaintext:Localization-French.strings
-"hello_world_key" = "Bonjour, le monde !";
-"another_key" = "Une autre valeur";
-```
-
-#### `Localization-German.strings`
-
-```plaintext:Localization-German.strings
-"hello_world_key" = "Hallo, Welt!";
-"another_key" = "Ein weiterer Wert";
-```
-
-
-### Installation:
-
-1. Fork github.com/eonist/Babel to your own github user / org
-2. Store your secrets in the repo settings: OPENAI_API_KEY, ~GITHUB_TOKEN~, SLACK_WEBHOOK_URL
-3. Add the spm package to your app project: `github.com/username/Babel` in your package or xcode project
-
-### Obtain secrets:
-
-- OpenAI -> admin.openai.com/api-secrets
-- Slack -> slack.com/settings/token
-- Github -> ~Github.com/username/reponame/settings/token~ (this is auto created in GA)
-
-### Gotchas: 
-
-- Ensure that the Localizable.strings file exists in the root directory of your repository or adjust the path accordingly.
-- Hardcode the openai key if you want to test things quickly: and add back ${{ secrets.OPENAI_API_KEY }} when needed. (Remember to reset the key or wipe git hist after)
-- Localization files are added to root/.lproj/Localizations.strings in packages
-
-Resources/en.lproj/Localizable.strings
+Resources/es.lproj/Localizable.strings
 Resources/gr.lproj/Localizable.strings
 Resources/fr.lproj/Localizable.strings
-Resources/es.lproj/Localizable.strings
+```
 
-### Todo: 
+### Obtain OpenAI api key: 
 
-- Add badge for platforms: WatchOS, iOS, VisionOS, MacOS
-- Add unit-tests
-- Add apples AI language translation kit to the unit tests, to double check language consistancy.
-- double check this claim: The total size of all outputs in a workflow run is limited to 50 MB
+To obtain an OpenAI API key, follow these steps:
 
+1. Go to the OpenAI platform website (platform.openai.com) and sign in or create an account if you don't have one
+
+2. Once logged in, click on your profile icon in the top-right corner of the page and select "View API keys"
+
+3. On the API keys page, click the "Create new secret key" button
+
+4. Optionally, give your API key a name to help you remember its purpose
+
+5. Choose the appropriate permissions for the key (all, restricted, or read-only)
+
+6. Click "Create secret key" to generate your new API ke
+
+7. Copy the generated API key immediately and store it in a secure location, as you won't be able to view it again after closing the windo
+
+Remember to set up a payment method in your account settings if you haven't already, as the API key won't work without a valid payment method on file It's also a good practice to use different keys for different applications to maintain better security and organization
+
+### Obtain Slack webhock
+
+To obtain a SLACK_WEBHOOK_URL, follow these steps:
+
+1. Create a Slack App:
+   - Go to the Slack API website and click "Create New App"
+   - Name your app and select the workspace where you want to use it
+
+2. Enable Incoming Webhooks:
+   - In your app's dashboard, find the "Incoming Webhooks" section
+   - Toggle the switch to activate Incoming Webhooks
+
+3. Add a New Webhook:
+   - Click "Add New Webhook to Workspace"
+   - Select the channel where you want the webhook to post messages
+   - Authorize the webhook for your workspace
+
+4. Copy the Webhook URL:
+   - After authorization, you'll see a unique Webhook URL generated for your app
+   - This URL will look like: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+## Important Notes:
+
+- Keep your webhook URL secret, as it contains sensitive information 
+- For GovSlack apps, use the `slack-gov.com` domain instead of `slack.com` 
+- You can customize webhook settings and message formatting as needed 
+
+By following these steps, you'll have your SLACK_WEBHOOK_URL ready for integration with external services or applications.
 
