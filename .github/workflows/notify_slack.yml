@@ -1,3 +1,44 @@
+## This workflow performs the following steps:
+## Defines Inputs: It accepts three inputs when the workflow is called:
+## num_of_languages: The count of languages translated.
+## tokens_count_used: The number of OpenAI tokens used.
+## unit_test_success: A boolean flag indicating if unit tests were successful.
+## Sends Slack Notification: It uses the `8398a7/action-slack@v3` action to send a notification to your Slack channel with the provided details.
+## Note: Ensure that you have the SLACK_WEBHOOK_URL secret configured in your repository settings.
+
+name: Notify Slack
+
+on:
+  workflow_call:
+    inputs:
+      num_of_languages:
+        description: 'Number of languages translated'
+        required: true
+        type: string
+      tokens_count_used:
+        description: 'Number of OpenAI tokens used in translation'
+        required: true
+        type: string
+      unit_test_success:
+        description: 'Unit test success flag'
+        required: true
+        type: boolean
+
+jobs:
+  send_slack_notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Babel translation complete.
+            Number of languages translated: ${{ inputs.num_of_languages }}
+            Tokens used: ${{ inputs.tokens_count_used }} OpenAI tokens
+            Testing completed: ${{ inputs.unit_test_success }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
 ## send slack-channel a notification
 ## get num_of_languages count from init params
 ## get tokens_count_used in translation from init params 
@@ -6,19 +47,3 @@
 ## "Babel translation complete. num_of_languages was translated. tokens_count_used openAI tokens was used. Testing completed: unit_test_success"
 
 ### we need unit_test_success, tokens_count_used, num_of_languages
-name: notify slack
-on:
-  workflow_call:
-    inputs:
-      input1:
-        required: true
-        type: string
-
-- jobs
-  ## pseudo code
-  - name: Send Slack notification
-    uses: 8398a7/action-slack@v3
-    with:
-      status: ${{ job.status }}
-      text: Workflow completed!
-      webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -160,6 +160,6 @@ Resources/es.lproj/Localizable.strings
 - Add badge for platforms: WatchOS, iOS, VisionOS, MacOS
 - Add unit-tests
 - Add apples AI language translation kit to the unit tests, to double check language consistancy.
-
+- double check this claim: The total size of all outputs in a workflow run is limited to 50 MB
 
 

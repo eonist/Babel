@@ -5,18 +5,32 @@ name: Swift Package CI
 
 on:
   workflow_call:
-    outputs:
-      success:
-        description: 'Whether the workflow completed successfully'
-        value: ${{ jobs.build-and-test.conclusion == 'success' }}
+    inputs:
+      input2:
+        description: 'No input required'
+        required: false
+    secrets: inherit
+
+outputs:
+  test_success:
+    description: 'Indicates if unit tests passed or failed'
+    value: ${{ jobs.run_tests.outputs.test_success }}
 
 jobs:
-  build-and-test:
-    runs-on: macos-latest
-
+  run_tests:
+    runs-on: ubuntu-latest
+    outputs:
+      test_success: ${{ steps.set_test_success_output.outputs.test_success }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        run: swift build
-      - name: Run tests
-        run: swift test
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run Unit Tests
+        id: test
+        run: |
+          swift test
+        continue-on-error: true
+      
+      - name: Set Test Success Output
+        id: set_test_success_output
+        run: echo "test_success=${{ steps.test.outcome }}" >> $GITHUB_OUTPUT

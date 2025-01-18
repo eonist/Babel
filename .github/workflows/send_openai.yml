@@ -11,9 +11,6 @@ name: Translate Localizable.strings
 on:
     workflow_call:
       inputs:
-        content:
-          required: true
-          type: string
         languages:
           required: true
           type: string
@@ -48,6 +45,13 @@ jobs:
             python -m pip install --upgrade pip
             pip install openai
     
+        ## Download content artifact
+        - name: Download content artifact
+            uses: actions/download-artifact@v3
+            with:
+            name: content_artifact
+            path: ./content
+    
         ## Run the translation script
         - name: Translate strings using OpenAI API
             env:
@@ -58,7 +62,7 @@ jobs:
         ## Upload translation results
         - name: Upload translations as artifact
             id: upload-translations
-            uses: actions/upload-artifact@v3/
+            uses: actions/upload-artifact@v3
             with:
             name: translations
             path: translations.json

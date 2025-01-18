@@ -22,9 +22,16 @@ jobs:
     uses: ./.github/workflows/send_openai.yml
     with:
       content: "${{ needs.call_read_content.outputs.content }}"
-      languages: ["es", "fr"]
+      languages: |
+        [
+          "es",
+          "fr"
+        ]
       gpt_model: "gpt-4"
       general_instruction: "Please ensure the translations are accurate and contextually appropriate."
+    outputs:
+      tokens_count_used: ${{ steps.get_tokens_count.outputs.tokens_count_used }}
+      num_of_languages: ${{ steps.get_languages_count.outputs.num_of_languages }}
 
  
   ## write content to files and commit & push (array of texts) and (language_codes_array)
@@ -35,17 +42,21 @@ jobs:
   
   ## Unit tests
   Swift_Package_CI:
-    ## run the package unit test
+    ## Run the package unit tests and get the result
+    needs: process_translations
     uses: ./.github/workflows/unit_test.yml
-    with:
-      input2: ... ## no input really required
-      ## we need to get the return value if the test was success or not
+    secrets: inherit
+    outputs:
+      test_success: ${{ steps.unit_test.outputs.test_success }}
 
-  ## Notify slack of job complete
-  job5:
-    ## pass the some tidbits to slack notifier (num_of_languages, tokens_count_used, unit_test_success)
+  ## Notify Slack of job completion
+  notify_slack:
+    needs: [Swift_Package_CI, call_translate_strings]
     uses: ./.github/workflows/notify_slack.yml
     with:
-      input2: ...
+      num_of_languages: "${{ needs.call_translate_strings.outputs.num_of_languages }}"
+      tokens_count_used: "${{ needs.call_translate_strings.outputs.tokens_count_used }}"
+      unit_test_success: ${{ needs.Swift_Package_CI.outputs.test_success }}
+    secrets: inherit
 
  
