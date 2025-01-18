@@ -16,7 +16,7 @@ Bable is a swift Package that you can load `localised.string` into your swift pr
 
 1. Pick the latest AI models from AI. from gpt3.5 to o1 and beyond. 
 2. Let Ai do what is meant to do. Aleviate reptetive time consuming tasks.
-3. Since Babel live in its own fork. Even non devs can edit clear text and hit commit. 
+3. Since Babel live in its own fork. Even non devs can edit clear text and hit the commit button. 
 
 ### Features:
 
