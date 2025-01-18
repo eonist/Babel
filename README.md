@@ -55,6 +55,8 @@ import Babel
 2. Store the your openai-key with the name: MY_SECRET in your repository settings.
 3. Add the spm package to your app project: `github.com/username/Babel` in your package or xcode project
 
+### Gotchas: 
+- Ensure that the Localizable.strings file exists in the root directory of your repository or adjust the path accordingly.
 
 ### Todo: 
 - Add badge for platforms: WatchOS, iOS, VisionOS, MacOS

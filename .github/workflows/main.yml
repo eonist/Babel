@@ -1,5 +1,27 @@
-- name: Read file contents
-  uses: guibranco/github-file-reader-action-v2@latest
-  id: read_file
-  with:
-    path: "Localizable.strings"
+name: Read and Print Localizable.strings
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  read_and_print_file:
+    runs-on: ubuntu-latest
+    steps:
+      ## Checkout the repository to access the files
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      ## Reads the Localizable.strings file
+      - name: Read file contents
+        id: read_file
+        uses: guibranco/github-file-reader-action-v2@latest
+        with:
+          path: "Localizable.strings"
+
+      ## Prints the content of the file
+      - name: Print file contents
+        run: |
+          echo "${{ steps.read_file.outputs.content }}"
