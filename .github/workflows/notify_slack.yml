@@ -1,0 +1,24 @@
+## send slack-channel a notification
+## get num_of_languages count from init params
+## get tokens_count_used in translation from init params 
+## get unit_test_success bool flag from init params
+## send payload to slack with:
+## "Babel translation complete. num_of_languages was translated. tokens_count_used openAI tokens was used. Testing completed: unit_test_success"
+
+### we need unit_test_success, tokens_count_used, num_of_languages
+name: notify slack
+on:
+  workflow_call:
+    inputs:
+      input1:
+        required: true
+        type: string
+
+- jobs
+  ## pseudo code
+  - name: Send Slack notification
+    uses: 8398a7/action-slack@v3
+    with:
+      status: ${{ job.status }}
+      text: Workflow completed!
+      webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,27 +1,43 @@
-name: Read and Print Localizable.strings
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+name: Main Workflow
+on: [push, pull_request]
 
 jobs:
-  read_and_print_file:
-    runs-on: ubuntu-latest
-    steps:
-      ## Checkout the repository to access the files
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  ## Read data from a file
+  job1:
+    uses: ./.github/workflows/read_content.yml
+    with:
+      input1: "Localizable.strings"
+    ## I need to get a value back from the read_content.yml
 
-      ## Reads the Localizable.strings file
-      - name: Read file contents
-        id: read_file
-        uses: guibranco/github-file-reader-action-v2@latest
-        with:
-          path: "Localizable.strings"
+  ## send open ai data
+  job2:
+    ## Send open_ai content and prompt instructions: content, languages, model to use (default is gpt4)
+    uses: ./.github/workflows/send_openai.yml
+    with:
+      input2: ...
+      ## return and use the result from openAI, json-content, and tokens_used_in_the_job
+  
+ 
+  ## write content to files and commit & push (array of texts) and (language_codes_array)
+  job3:
+    ## pass the value to the file writer
+    uses: ./.github/workflows/write_content.yml
+    with:
+      input2: ...
 
-      ## Prints the content of the file
-      - name: Print file contents
-        run: |
-          echo "${{ steps.read_file.outputs.content }}"
+  ## Unit tests
+  job4:
+    ## run the package unit test
+    uses: ./.github/workflows/unit_test.yml
+    with:
+      input2: ... ## no input really required
+      ## we need to get the return value if the test was success or not
+
+  ## Notify slack of job complete
+  job5:
+    ## pass the some tidbits to slack notifier (num_of_languages, tokens_count_used, unit_test_success)
+    uses: ./.github/workflows/notify_slack.yml
+    with:
+      input2: ...
+
+ 

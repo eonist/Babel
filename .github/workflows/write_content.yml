@@ -1,0 +1,31 @@
+## convert json to array of language_code, content
+## write each item in array to a file 
+## save content to files to root with name: "Localised-{{language_code}}".strings 
+## make a new commit and push
+
+name: write content
+
+on:
+    workflow_call:
+      inputs:
+        input1:
+          required: true
+          type: string
+
+- jobs
+  ## Pseudo code
+  - name: Write to file
+    uses: DamianReeves/write-file-action@master
+    with:
+      path: path/to/file.txt
+      contents: |
+        Hello World!
+      write-mode: overwrite
+
+  ## Pseudo code
+  - name: Commit & Push
+  uses: Andro999b/push@v1.3
+  with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      branch: main
+      message: 'Updated by Github Actions'

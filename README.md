@@ -49,6 +49,57 @@ import Babel
 "farewell_key" = "Thank you for using our app!";
 ```
 
+### Languages:
+Add desired languages to the .github/workflows/main.yml file:
+```yml
+languages = ["Spanish", "French", "German"]  # Modify as needed
+```
+
+### OpenAI prompt: 
+
+```swift
+  prompt = f"""
+  Translate the following content to languages: {', '.join(languages)}.
+  Return the translations in JSON dict format with language as key and value as an array of key-value pairs.
+  Each key-value pair should correspond to the original keys and their translated values.
+
+  The content format is lines like: "hello_world_key" = "Hello, World!";
+
+  Content:
+  {content}
+  """
+```
+
+### Translation json from OpenAI:
+```json
+{
+  "Spanish": [
+    {
+      "hello_world_key": "¡Hola, Mundo!"
+    },
+    {
+      "another_key": "Otro valor"
+    }
+  ],
+  "French": [
+    {
+      "hello_world_key": "Bonjour, le monde !"
+    },
+    {
+      "another_key": "Une autre valeur"
+    }
+  ],
+  "German": [
+    {
+      "hello_world_key": "Hallo, Welt!"
+    },
+    {
+      "another_key": "Ein weiterer Wert"
+    }
+  ]
+}
+```
+
 ### Installation:
 
 1. Fork github.com/eonist/Babel to your own github user / org

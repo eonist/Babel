@@ -1,0 +1,23 @@
+## run swift build and test for the Package.swift
+## return success or failure
+
+name: Swift Package CI
+
+## we dont need input for this test so remove it
+on:
+    workflow_call:
+      inputs:
+        input1:
+          required: true
+          type: string
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: swift build
+    - name: Run tests
+      run: swift test

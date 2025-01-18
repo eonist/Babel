@@ -1,0 +1,29 @@
+## we get file name to read in the init
+
+name: read content
+on:
+  workflow_call:
+    inputs:
+      input1:
+        required: true
+        type: string
+
+jobs:
+  reusable_job:
+    runs-on: ubuntu-latest
+    steps:
+      ## Checkout the repository to access the files
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      ## Reads the Localizable.strings file
+      - name: Read file contents
+        id: read_file
+        uses: guibranco/github-file-reader-action-v2@latest
+        with:
+          path: ${{ inputs.input1 }}"
+
+      ## Prints the content of the file
+      - name: Print file contents
+        run: |
+          echo "${{ steps.read_file.outputs.content }}"
