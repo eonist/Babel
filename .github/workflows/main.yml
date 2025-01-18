@@ -1,62 +1,71 @@
 name: Main Workflow
-on: [push] ##, pull_request
-
-name: Caller Workflow
 
 on:
   push:
- 
+    branches:
+      - main
+  pull_request:
+
 jobs:
-  ## Read data from a file
-  ## And get a value back from the read_content.yml
-  call_read_content:
-    uses: ./.github/workflows/read_content.yml
-    with:
-      input1: "Localizable.strings"
-    secrets: inherit
-    
-  ## send open ai data
-  call_translate_strings:
-    needs: call_read_content
+  read_content:
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/send_openai.yml
-    with:
-      content: "${{ needs.call_read_content.outputs.content }}"
-      languages: |
-        [
-          "es",
-          "fr"
-        ]
-      gpt_model: "gpt-4"
-      general_instruction: "Please ensure the translations are accurate and contextually appropriate."
+    steps:
+      - name: Read Content
+        id: read_content_step
+        uses: ./.github/actions/read_content
+        with:
+          input1: "Resources/en.lproj/Localizable.strings"
     outputs:
-      tokens_count_used: ${{ steps.get_tokens_count.outputs.tokens_count_used }}
-      num_of_languages: ${{ steps.get_languages_count.outputs.num_of_languages }}
+      content: ${{ steps.read_content_step.outputs.content }}
 
- 
-  ## write content to files and commit & push (array of texts) and (language_codes_array)
-  process_translations:
-    needs: call_translate_strings
-    uses: ./.github/workflows/write_content.yml
+  send_to_openai:
     runs-on: ubuntu-latest
-  
-  ## Unit tests
-  Swift_Package_CI:
-    ## Run the package unit tests and get the result
-    needs: process_translations
-    uses: ./.github/workflows/unit_test.yml
-    secrets: inherit
+    needs: read_content
+    steps:
+      - name: Send Data to OpenAI
+        id: send_openai_step
+        uses: ./.github/actions/send_to_openai
+        with:
+          content: "${{ needs.read_content.outputs.content }}"
+          languages: |
+            [
+              "es",
+              "fr",
+              "de"
+            ]
+          gpt_model: "gpt-4"
+          general_instruction: "Please ensure the translations are accurate and contextually appropriate."
     outputs:
-      test_success: ${{ steps.unit_test.outputs.test_success }}
+      num_of_languages: ${{ steps.send_openai_step.outputs.num_of_languages }}
+      tokens_count_used: ${{ steps.send_openai_step.outputs.tokens_count_used }}
 
-  ## Notify Slack of job completion
+  write_content:
+    runs-on: ubuntu-latest
+    needs: send_to_openai
+    steps:
+      - name: Write Content
+        uses: ./.github/actions/write_content
+
+  unit_test:
+    runs-on: ubuntu-latest
+    needs: write_content
+    steps:
+      - name: Run Unit Tests
+        id: unit_test_step
+        uses: ./.github/actions/unit_test
+    outputs:
+      test_success: ${{ steps.unit_test_step.outputs.test_success }}
+
   notify_slack:
-    needs: [Swift_Package_CI, call_translate_strings]
-    uses: ./.github/workflows/notify_slack.yml
-    with:
-      num_of_languages: "${{ needs.call_translate_strings.outputs.num_of_languages }}"
-      tokens_count_used: "${{ needs.call_translate_strings.outputs.tokens_count_used }}"
-      unit_test_success: ${{ needs.Swift_Package_CI.outputs.test_success }}
-    secrets: inherit
-
+    runs-on: ubuntu-latest
+    needs:
+      - unit_test
+      - send_to_openai
+    steps:
+      - name: Notify Slack
+        uses: ./.github/actions/notify_slack
+        with:
+          num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"
+          tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
+          unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
  

@@ -4,28 +4,28 @@
 
 ### Description:
 
-Babel translates to the desired languages via github actions. Translations are handled automatically with your own open-ai api key, everytime you change `Localizable.strings` in your babel fork. Slack gets notified on completion. And your app loads the latest localisations automaticall via SPM if you setup periodical daily release. 
-
-### Problem: 
-
-1. Translating your `Localizable.strings` into every language is a pain
-2. Manual processes are error prone. And time consuming.
-3. Only devs can ensure pipeline works when new translations are needed (often) 
-
-### Solution:
-
-1. Use the power of OpenAI models, from gpt3.5 to o1 and beyond to auto translate 1 or 100s of languages at scale.
-2. General language Unit-tests are included and makes sure translations are reliable. Get notified on slack if the translations succeeded or failed. And block deploys. 
-3. Since Babel live in its own fork. Even non devs can edit clear text and hit the commit button. And babel takes care of the rest. This requires that you have setup auto deploying for the app-store etc. 
+Babel automatically translates your app into desired languages using GitHub Actions. By providing your own OpenAI API key, translations are handled every time you update the `Resources/en.lproj/Localizable.strings` file in your Babel fork. Upon completion, a Slack notification is sent to inform you of the update. Additionally, your app will load the latest localizations automatically via Swift Package Manager (SPM) if you set up periodic daily releases.
 
 ### Features:
 
-- Bring your own Open-ai key
-- Trigger translations on push
-- Token based pricing. (First $5 is on OpenAI)
-- Supports all languages (1..100s)
-- Unit-tests built in
-- Slack notification on complete
+- 🔑 **Bring Your Own OpenAI Key**: Use your personal OpenAI API key for secure and controlled access.
+- 🚀 **Automatic Translations on Push**: Trigger translations effortlessly every time you push updates.
+- 💰 **Cost-Efficient Token-Based Pricing**: Pay only for what you use; the first $5 is covered by OpenAI.
+- 🌍 **Supports All Languages**: Translate into any number of languages, from one to hundreds.
+- ✅ **Built-In Unit Tests**: Ensure reliability with comprehensive automated testing.
+- 🔔 **Slack Notifications on Completion**: Receive instant updates on translation status directly in Slack.
+
+### Problem:
+
+1. Manually translating your `Resources/en.lproj/Localizable.strings` file into multiple languages is tedious and time-consuming.
+2. Manual processes are error-prone and inefficient.
+3. Frequent translation updates require developers to maintain the pipeline, limiting who can manage translations.
+
+### Solution:
+
+1. Leverage the power of OpenAI models, like GPT-3.5 and GPT-4, to automatically translate into one or hundreds of languages at scale.
+2. Integrate comprehensive language unit tests to ensure translations are reliable, receive Slack notifications upon success or failure, and block deployments if necessary.
+3. With Babel existing in its own fork, even non-developers can edit plain text and commit changes. Babel handles the rest, provided you have set up automatic deployments for the App Store or other platforms.
 
 ### Installation:
 
@@ -70,51 +70,53 @@ Resources/gr.lproj/Localizable.strings
 Resources/fr.lproj/Localizable.strings
 ```
 
-### Obtain OpenAI api key: 
+### Obtain OpenAI API Key
 
-To obtain an OpenAI API key, follow these steps:
+Follow these steps to get your OpenAI API key:
 
-1. Go to the OpenAI platform website (platform.openai.com) and sign in or create an account if you don't have one
+1. Visit [platform.openai.com](https://platform.openai.com) and log in or sign up.
 
-2. Once logged in, click on your profile icon in the top-right corner of the page and select "View API keys"
+2. Click on your profile icon in the top-right corner and select "View API keys".
 
-3. On the API keys page, click the "Create new secret key" button
+3. Click the "Create new secret key" button.
 
-4. Optionally, give your API key a name to help you remember its purpose
+4. (Optional) Name your API key for easy identification.
 
-5. Choose the appropriate permissions for the key (all, restricted, or read-only)
+5. Choose the desired permissions: all, restricted, or read-only.
 
-6. Click "Create secret key" to generate your new API ke
+6. Click "Create secret key" to generate your key.
 
-7. Copy the generated API key immediately and store it in a secure location, as you won't be able to view it again after closing the windo
+7. Copy and securely store your API key immediately, as it won't be shown again.
 
-Remember to set up a payment method in your account settings if you haven't already, as the API key won't work without a valid payment method on file It's also a good practice to use different keys for different applications to maintain better security and organization
+> **Note:** Ensure you've added a payment method in your account settings. It's recommended to use separate keys for different applications to enhance security.
 
-### Obtain Slack webhock
+### Obtain Slack Webhook
 
-To obtain a SLACK_WEBHOOK_URL, follow these steps:
+Follow these steps to get your SLACK_WEBHOOK_URL:
 
-1. Create a Slack App:
-   - Go to the Slack API website and click "Create New App"
-   - Name your app and select the workspace where you want to use it
+1. **Create a Slack App:**
+   - Visit the Slack API website and click "Create New App".
+   - Name your app and choose the workspace to use it in.
 
-2. Enable Incoming Webhooks:
-   - In your app's dashboard, find the "Incoming Webhooks" section
-   - Toggle the switch to activate Incoming Webhooks
+2. **Enable Incoming Webhooks:**
+   - In the app dashboard, go to "Incoming Webhooks".
+   - Toggle the switch to activate Incoming Webhooks.
 
-3. Add a New Webhook:
-   - Click "Add New Webhook to Workspace"
-   - Select the channel where you want the webhook to post messages
-   - Authorize the webhook for your workspace
+3. **Add a Webhook:**
+   - Click "Add New Webhook to Workspace".
+   - Select the channel for the webhook to post messages.
+   - Authorize the webhook for your workspace.
 
-4. Copy the Webhook URL:
-   - After authorization, you'll see a unique Webhook URL generated for your app
-   - This URL will look like: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
-## Important Notes:
+4. **Copy the Webhook URL:**
+   - After authorization, a unique Webhook URL will be generated.
+   - It will look like: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
 
-- Keep your webhook URL secret, as it contains sensitive information 
-- For GovSlack apps, use the `slack-gov.com` domain instead of `slack.com` 
-- You can customize webhook settings and message formatting as needed 
+> **Important Notes**
+> 
+> - Keep your Webhook URL secret, as it contains sensitive information.
+> - For GovSlack apps, use the `slack-gov.com` domain instead of `slack.com`.
+> - Customize webhook settings and message formatting as needed.
 
 By following these steps, you'll have your SLACK_WEBHOOK_URL ready for integration with external services or applications.
+
 
