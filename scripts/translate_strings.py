@@ -1,6 +1,6 @@
 import argparse
 import openai
-from openai import OpenAIError
+from openai.error import OpenAIError
 import json
 import os
 import sys
