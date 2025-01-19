@@ -17,6 +17,7 @@ jobs:
   # Job to read content from a specified file
   read_content:
     name: Read Content
+    if: ${{ github.actor != 'github-actions[bot]' }}
     uses: ./.github/workflows/read_content.yml
     with:
       # The input file path to read
@@ -25,6 +26,7 @@ jobs:
   send_to_openai:
     name: Send Data to OpenAI
     needs: read_content
+    if: ${{ github.actor != 'github-actions[bot]' }}
     uses: ./.github/workflows/send_openai.yml
     with:
       # Content obtained from the read_content job's output
@@ -45,12 +47,14 @@ jobs:
   write_content:
     name: Write Content
     needs: send_to_openai
+    if: ${{ github.actor != 'github-actions[bot]' }}
     uses: ./.github/workflows/write_content.yml
     secrets: inherit
 
   unit_test:
     name: Run Unit Tests
     needs: write_content
+    if: ${{ github.actor != 'github-actions[bot]' }}
     uses: ./.github/workflows/unit_test.yml
     secrets: inherit
 
@@ -59,6 +63,7 @@ jobs:
     needs:
       - unit_test
       - send_to_openai
+    if: ${{ github.actor != 'github-actions[bot]' }}
     uses: ./.github/workflows/notify_slack.yml
     with:
       # Pass the number of languages translated
