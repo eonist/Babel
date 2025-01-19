@@ -191,7 +191,6 @@ To add the secrets to a GitHub repository, follow these steps:
 
 
 > [!IMPORTANT]
->
 > - Secrets are encrypted and only exposed to selected actions during runtime.
 > - Repository secrets are only accessible to repository collaborators.
 > - Avoid storing sensitive information directly in your repository code or GitHub Actions workflow files.
