@@ -203,7 +203,7 @@ To add the secrets to a GitHub repository, follow these steps:
 - [https://lokalise.com/](https://lokalise.com/) $120 per month (5k keys)
 
 > [!NOTE]
-> - Babel is based on token price. 
+> - Babel is based on token price. (An avarage usecase should cost 0.01$ - 1$ per month)
 > - 5k words to 10 languages: whit gpt-4-turbo: $0.267 * 10 = $2.67
 > - 5k words to 10 languages: whit gpt-3.5-turbo: $0.015 * 10 = $0.15
 > - Using other models from other providers could decrease cost signifincantly. (coming soon)
