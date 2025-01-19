@@ -68,6 +68,12 @@ Babel automates the translation of your app's strings into multiple languages us
 - **Slack Workspace**: Have access to a Slack workspace where you can add apps and receive notifications.
 - **Xcode 15 or Later**: Required for Swift 5.9 and iOS 17 / macOS 14 development.
 
+## Getting Started
+
+Babel allows you to automate the localization of your iOS or macOS app using AI. Here's how to get up and running:
+
+ 
+
 ### Installation:
 
 1. **Fork the Repository**
@@ -90,9 +96,13 @@ Babel automates the translation of your app's strings into multiple languages us
    languages = ["es", "fr", "de"]  # Modify as needed: "Spanish" (es), "French" (fr), "German" (de)
    ```
 
-5. **Set Up Automated Releases (Optional)**
+5. **Push changes to trigger the translation workflow**
 
-   For automatic inclusion of translations via Swift Package Manager (SPM), set up periodic daily releases to app-store in your repository settings.
+   Edit the "key words" you want to localize in any text editor: `Sources/Babel/Resources/Localizable.strings` push the changes with terminal or github desktop. You can also edit key words directly on github.com and the translations will be triggered on save. 
+
+6. **Set Up Automated Releases (Optional)**
+
+   For automatic inclusion of translations via Swift Package Manager (SPM), set up periodic daily releases to app-store in your apps github action workflow.
 
 ### Example:
 
@@ -102,14 +112,10 @@ import Babel
 
 #Preview {
    VStack {
-      Text("greeting_key".localized()) // Use your Babel translations
-            .environment(\.locale, Locale(identifier: "en")) // Shows English translation
-
-      Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
-            .environment(\.locale, Locale(identifier: "fr")) // Shows French translation
-
-      Text("farewell_key".localized())
-            .environment(\.locale, Locale(identifier: "de")) // Shows German translation
+      Text("greeting_key", bundle: .babelModule)  
+         .environment(\.locale, Locale(identifier: "es")) 
+      Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "de") ?? .babelModule))
+      Text("farewell_key".localized(langCode: "fr"))  
    }
 }
 ```
@@ -141,21 +147,15 @@ Sources/Babel/Resources/de.lproj/Localizable.strings
 
 ### Obtain OpenAI API Key
 
-Follow these steps to get your OPENAI_API_KEY:
+Follow these steps to get your `OPENAI_API_KEY`:
 
 1. Visit [platform.openai.com](https://platform.openai.com) and log in or sign up.
 
-2. Click on your profile icon in the top-right corner and select "View API keys".
+2. Click on your profile icon in the top-right corner and select **"View API keys"**.
 
-3. Click the "Create new secret key" button.
+3. Click the **"Create new secret key"** button.
 
-4. (Optional) Name your API key for easy identification.
-
-5. Choose the desired permissions: all, restricted, or read-only.
-
-6. Click "Create secret key" to generate your key.
-
-7. Copy and securely store your API key immediately, as it won't be shown again.
+4. **Copy and securely store your API key immediately**, as it won't be shown again.
 
 > [!NOTE]
 > Ensure you've added a payment method in your account settings. It's recommended to use separate keys for different applications to enhance security.
@@ -213,11 +213,15 @@ To add the secrets to a GitHub repository, follow these steps:
 
 > [!NOTE]
 > - Babel is based on token price. (An avarage usecase should cost 0.01$ - 1$ per month)
-> - 5k words to 10 languages: whit gpt-4-turbo: $0.267 * 10 = $2.67
-> - 5k words to 10 languages: whit gpt-3.5-turbo: $0.015 * 10 = $0.15
-> - Using other models from other providers could decrease cost signifincantly. (coming soon)
+> - 5k words to 10 languages: with gpt-4-turbo: $0.267 * 10 = $2.67
+> - 5k words to 10 languages: with gpt-3.5-turbo: $0.015 * 10 = $0.15
+> - Using other models from other providers could decrease cost significantly. (coming soon)
 > - Only translating diff change will reduce running cost to near zero. (coming soon)
 
 ## Support
 
-If you encounter any problems or have questions, feel free to [open an issue](https://github.com/your-user-name/Babel/issues) on GitHub.
+If you encounter any problems or have questions, feel free to [open an issue](https://github.com/eonist/Babel/issues) on GitHub.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
