@@ -199,9 +199,16 @@ To add the secrets to a GitHub repository, follow these steps:
 
 ## Alternative solutions: 
 
-- [https://crowdin.com](https://crowdin.com) 
-- [https://phrase.com](https://phrase.com) 
-- [https://lokalise.com/](https://lokalise.com/) 
+- [https://crowdin.com](https://crowdin.com) $151 per month (team plan 100k words)
+- [https://phrase.com](https://phrase.com) $135 per month (200k words)
+- [https://lokalise.com/](https://lokalise.com/) $120 per month (5k keys)
+
+> [!NOTE]
+> - Babel is based on token price. 
+> - 5k words to 10 languages: whit gpt-4-turbo: $0.267 * 10 = $2.67
+> - 5k words to 10 languages: whit gpt-3.5-turbo: $0.015 * 10 = $0.15
+> - Using other models from other providers could decrease cost signifincantly. (coming soon)
+> - Only translating diff change will reduce running cost to near zero. (coming soon)
 
 ## Support
 
