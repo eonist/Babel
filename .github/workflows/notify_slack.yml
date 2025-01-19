@@ -50,15 +50,14 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: |
-            {
-              "Babel translation complete.": "",
-              "Number of languages translated": "${{ inputs.num_of_languages }}",
-              "Tokens used": "${{ inputs.tokens_count_used }} OpenAI tokens",
-              "Testing completed": "${{ inputs.unit_test_success }}"
-            }
+          custom: |
+            Babel translation complete.
+            Number of languages translated: ${{ inputs.num_of_languages }}
+            Tokens used: ${{ inputs.tokens_count_used }} OpenAI tokens
+            Testing completed: ${{ inputs.unit_test_success }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always() # Ensure the notification is sent even if the job fails or is canceled.
 
 ## send slack-channel a notification
 ## get num_of_languages count from init params
