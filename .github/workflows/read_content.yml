@@ -17,34 +17,28 @@ on:
   workflow_call:
     inputs:
       input1:
-        description: 'Path to the file to read'
+        description: 'The input file path to read'
         required: true
         type: string
-    secrets: inherit
 
 outputs:
   content:
     description: 'Content of the file read from the specified path'
-    value: ${{ jobs.reusable_job.outputs.file_content }}
+    value: ${{ jobs.read.outputs.content }}
 
 jobs:
-  reusable_job:
+  read:
     runs-on: ubuntu-latest
     outputs:
-      file_content: ${{ steps.read_file.outputs.content }}
+      content: ${{ steps.read_output.outputs.content }}
     steps:
-      # Step 1: Checkout the repository to access files
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Read the file content
-      - name: Read file contents
-        id: read_file
-        uses: guibranco/github-file-reader-action-v2@latest
-        with:
-          path: ${{ inputs.input1 }}
-
-      # Step 3: Print the file contents to the console (optional)
-      - name: Print file contents
+      - name: Read Content
+        id: read_output
         run: |
-          echo "${{ steps.read_file.outputs.content }}"
+          content=$(cat ${{ github.workspace }}/${{ inputs.input1 }})
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$content" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
