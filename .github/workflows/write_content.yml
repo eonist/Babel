@@ -9,10 +9,6 @@ name: Write Content
 
 on:
   workflow_call:
-    inputs:
-      # Define your inputs here
-
-permissions: inherit  # Inherit permissions from calling workflow
 
 jobs:
   write_content_job:
@@ -30,8 +26,7 @@ jobs:
           path: ./artifacts
 
       # Step 3: (Optional) Extract translations if necessary
-      # Remove these steps if the artifact doesn't need manual extraction
-      - name: Extract translations
+      - name: Extract translations (Linux/macOS)
         if: ${{ runner.os != 'Windows' }}
         run: |
           tar -xzf ./artifacts/translations.tar.gz -C ./artifacts
@@ -42,8 +37,6 @@ jobs:
         run: |
           Expand-Archive -Path ./artifacts/translations.tar.gz -DestinationPath ./artifacts
         shell: powershell
-
-      # Note: If extraction isn't needed, remove the above steps.
 
       # Step 4: Set up Node.js
       - name: Set up Node.js
