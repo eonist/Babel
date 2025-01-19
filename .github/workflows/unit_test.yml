@@ -1,49 +1,50 @@
-## Purpose: Runs unit tests on the new localization files to ensure they are valid.
-## Verification:
-## Workflow File: The unit_test.yml aims to run Swift unit tests and output the success status.
+## Purpose: Runs unit tests on the Swift package to ensure localization files are valid.
+## Steps:
+## - Checkout the repository code.
+## - Cache Swift packages for faster builds.
+## - Build the Swift package using `swift build` in release configuration.
+## - Run unit tests using `swift test` in release configuration.
+## - Output the success status of unit tests.
 
-## run swift build and test for the Package.swift
-## return success or failure
-
-name: Swift Package CI
+name: Swift Package CI  # Name of the CI workflow
 
 on:
   workflow_call:
     outputs:
       test_success:
-        description: 'Whether the unit tests succeeded'
-        value: ${{ jobs.test.outputs.test_success }}
+        description: 'Whether the unit tests succeeded'  # Description of the test_success output
+        value: ${{ jobs.test.outputs.test_success }}  # Value from the test job
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-latest  # Use macOS runner
     outputs:
-      test_success: ${{ steps.set_unit_test_success.outputs.unit_test_success }}
+      test_success: ${{ steps.set_unit_test_success.outputs.unit_test_success }}  # Output from the Set unit_test_success step
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # Checkout the repository code
 
       - name: Cache Swift Packages
-        uses: actions/cache@v3
+        uses: actions/cache@v3  # Cache dependencies to speed up builds
         with:
-          path: .build
-          key: ${{ runner.os }}-swift-packages-${{ hashFiles('Package.resolved') }}
+          path: .build  # Directory to cache
+          key: ${{ runner.os }}-swift-packages-${{ hashFiles('Package.resolved') }}  # Unique cache key based on OS and resolved packages
           restore-keys: |
-            ${{ runner.os }}-swift-packages-
+            ${{ runner.os }}-swift-packages-  # Fallback cache keys
 
       - name: Build
-        run: swift build -v --configuration release
+        run: swift build -v --configuration release  # Build the Swift package in release mode
 
       - name: Run tests
         id: run_tests
-        run: swift test -v --configuration release
-        continue-on-error: true
+        run: swift test -v --configuration release  # Execute unit tests
+        continue-on-error: true  # Continue workflow even if tests fail
 
       - name: Set unit_test_success
         id: set_unit_test_success
         run: |
           if [ "${{ steps.run_tests.outcome }}" == "success" ]; then
-            echo "unit_test_success=true" >> $GITHUB_OUTPUT
+            echo "unit_test_success=true" >> $GITHUB_OUTPUT  # Indicate test success
           else
-            echo "unit_test_success=false" >> $GITHUB_OUTPUT
+            echo "unit_test_success=false" >> $GITHUB_OUTPUT  # Indicate test failure
           fi
 
