@@ -1,78 +1,80 @@
-name: Main Workflow
+name: Main Workflow  # The name of the workflow
 
 on:
   push:
     branches:
-      - main
+      - main  # Trigger the workflow on pushes to the 'main' branch
   pull_request:
     branches:
-      - main
+      - main  # Trigger the workflow on pull requests targeting the 'main' branch
 
 permissions:
-  contents: write
-  pull-requests: write
-  # Add other necessary permissions
+  contents: write        # Grants write access to repository contents
+  pull-requests: write   # Grants write access to pull requests
+  # Add other necessary permissions as needed
 
 jobs:
   # Job to read content from a specified file
   read_content:
     name: Read Content
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    uses: ./.github/workflows/read_content.yml
+    if: ${{ github.actor != 'github-actions[bot]' }}  # Prevents recursion by ignoring actions triggered by the GitHub Actions bot
+    uses: ./.github/workflows/read_content.yml  # Reusable workflow to read content from a file
     with:
       # The input file path to read
-      input1: "Sources/Babel/Resources/en.lproj/Localizable.strings"
+      input1: "Sources/Babel/Resources/en.lproj/Localizable.strings"  # Path to the source file to read
 
+  # Job to send data to OpenAI for translation
   send_to_openai:
     name: Send Data to OpenAI
-    needs: read_content
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    uses: ./.github/workflows/send_openai.yml
+    needs: read_content  # Depends on the 'read_content' job
+    if: ${{ github.actor != 'github-actions[bot]' }}  # Prevents recursion
+    uses: ./.github/workflows/send_openai.yml  # Reusable workflow to interact with OpenAI API
     with:
       # Content obtained from the read_content job's output
-      content: "${{ needs.read_content.outputs.content }}"
+      content: "${{ needs.read_content.outputs.content }}"  # Uses the content output from 'read_content' job
       # List of target languages for translation
       languages: |
         [
-          "es",
-          "fr",
-          "de"
+          "es",  # Spanish
+          "fr",  # French
+          "de"   # German
         ]
       # Specify the GPT model to use for translation
       # You can also use models like "gpt-3.5-turbo" or "gpt-4-turbo" to reduce costs
-      gpt_model: "gpt-4"
+      gpt_model: "gpt-4"  # The GPT model used for translation
       # Instruction for the translation model to ensure quality
-      general_instruction: "Please ensure the translations are accurate and contextually appropriate."
-    secrets: inherit
+      general_instruction: "Please ensure the translations are accurate and contextually appropriate."  # Translation guidelines
+    secrets: inherit  # Inherits secrets from the main workflow
 
+  # Job to write the translated content back to the repository
   write_content:
     name: Write Content
-    needs: send_to_openai
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    uses: ./.github/workflows/write_content.yml
-    secrets: inherit
+    needs: send_to_openai  # Depends on the 'send_to_openai' job
+    if: ${{ github.actor != 'github-actions[bot]' }}  # Prevents recursion
+    uses: ./.github/workflows/write_content.yml  # Reusable workflow to write content
+    secrets: inherit  # Inherits secrets from the main workflow
 
+  # Job to run unit tests on the updated content
   unit_test:
     name: Run Unit Tests
-    needs: write_content
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    uses: ./.github/workflows/unit_test.yml
-    secrets: inherit
+    needs: write_content  # Depends on the 'write_content' job
+    if: ${{ github.actor != 'github-actions[bot]' }}  # Prevents recursion
+    uses: ./.github/workflows/unit_test.yml  # Reusable workflow to execute unit tests
+    secrets: inherit  # Inherits secrets from the main workflow
 
+  # Job to notify Slack about the workflow results
   notify_slack:
     name: Notify Slack
     needs:
-      - unit_test
-      - send_to_openai
-    if: ${{ github.actor != 'github-actions[bot]' }}
-    uses: ./.github/workflows/notify_slack.yml
+      - unit_test       # Depends on the 'unit_test' job
+      - send_to_openai  # Also depends on the 'send_to_openai' job
+    if: ${{ github.actor != 'github-actions[bot]' }}  # Prevents recursion
+    uses: ./.github/workflows/notify_slack.yml  # Reusable workflow to send notifications to Slack
     with:
       # Pass the number of languages translated
-      num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"
+      num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"  # Number of languages processed
       # Pass the token count used in the translation
-      tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
+      tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"  # Total tokens used during translation
       # Pass the result of the unit tests
-      unit_test_success: "${{ needs.unit_test.outputs.test_success == 'true' }}"
-    secrets: inherit ## Important or else secret isnt found in sub workflow
-
- 
+      unit_test_success: "${{ needs.unit_test.outputs.test_success == 'true' }}"  # Whether unit tests passed
+    secrets: inherit  # Important or else secrets aren't found in the sub-workflow
