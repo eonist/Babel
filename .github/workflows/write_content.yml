@@ -10,6 +10,9 @@ name: Write Content
 on:
   workflow_call:
 
+permissions:
+  contents: write  # Grants write permission to push changes
+
 jobs:
   write_content_job:
     runs-on: ubuntu-latest
@@ -25,37 +28,26 @@ jobs:
           name: translations
           path: ./artifacts
 
-      # Step 3: (Optional) Extract translations if necessary
-      - name: Extract translations (Linux/macOS)
-        if: ${{ runner.os != 'Windows' }}
-        run: |
-          tar -xzf ./artifacts/translations.tar.gz -C ./artifacts
-        shell: bash
+      # Note: The artifact is automatically extracted. No need for manual extraction.
 
-      - name: Extract translations (Windows)
-        if: ${{ runner.os == 'Windows' }}
-        run: |
-          Expand-Archive -Path ./artifacts/translations.tar.gz -DestinationPath ./artifacts
-        shell: powershell
-
-      # Step 4: Set up Node.js
+      # Step 3: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'  # Consider updating to '18.x' if possible
+          node-version: '18.x'  # Updated to the latest LTS version
 
-      # Step 5: Create localization files using the extracted translations
+      # Step 4: Create localization files using the extracted translations
       - name: Create localization files
         run: |
           node scripts/write_localizations.js ./artifacts/translations.json
 
-      # Step 6: Configure Git with user information
+      # Step 5: Configure Git with user information
       - name: Configure Git
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-      # Step 7: Commit and Push changes
+      # Step 6: Commit and Push changes
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
