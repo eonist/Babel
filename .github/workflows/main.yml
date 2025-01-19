@@ -51,7 +51,7 @@ jobs:
   unit_test:
     name: Run Unit Tests
     needs: write_content
-    uses: eonist/Babel/.github/workflows/unit_test.yml@main
+    uses: eonist/Babel/.github/workflows/unit_test.yml
     secrets:
       GITHUB_TOKEN: inherit
 
