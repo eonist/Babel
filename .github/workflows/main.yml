@@ -10,8 +10,8 @@ on:
 
 permissions:
   contents: write
-  actions: read
   pull-requests: write
+  # Add other necessary permissions
 
 jobs:
   # Job to read content from a specified file

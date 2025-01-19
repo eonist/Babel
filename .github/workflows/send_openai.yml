@@ -16,30 +16,35 @@ on:
   workflow_call:
     inputs:
       content:
+        description: 'Content to translate'
         required: true
         type: string
       languages:
+        description: 'Target languages'
         required: true
         type: string
       gpt_model:
-        required: false
+        description: 'GPT model to use'
+        required: true
         type: string
-        default: "gpt-4"
       general_instruction:
-        required: false
+        description: 'Instruction for translation'
+        required: true
         type: string
-        default: ""
-      openai_api_key:
-        required: false
-        type: string
+    outputs:
+      num_of_languages:
+        description: 'Number of languages translated'
+        value: ${{ jobs.translate.outputs.num_of_languages }}
+      tokens_count_used:
+        description: 'Tokens used in translation'
+        value: ${{ jobs.translate.outputs.tokens_count_used }}
 
 jobs:
-  translate_strings:
+  translate:
     runs-on: ubuntu-latest
     outputs:
-      translations-path: ${{ steps.upload-translations.outputs.artifact-path }}
-      num_of_languages: ${{ steps.translate.outputs.num_of_languages }}
-      tokens_count_used: ${{ steps.translate.outputs.tokens_count_used }}
+      num_of_languages: ${{ steps.translation.outputs.num_of_languages }}
+      tokens_count_used: ${{ steps.translation.outputs.tokens_count_used }}
     steps:
       ## Step 1: Checkout the repository to access scripts and resources
       - name: Checkout repository
@@ -59,7 +64,7 @@ jobs:
 
       ## Step 4: Run the translation script using OpenAI API
       - name: Translate strings using OpenAI API
-        id: translate
+        id: translation
         env:
           # Use the provided OpenAI API key or fallback to the secret
           OPENAI_API_KEY: ${{ inputs.openai_api_key != '' && inputs.openai_api_key || secrets.OPENAI_API_KEY }}

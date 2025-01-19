@@ -20,11 +20,10 @@ on:
         description: 'The input file path to read'
         required: true
         type: string
-
-outputs:
-  content:
-    description: 'Content of the file read from the specified path'
-    value: ${{ jobs.read.outputs.content }}
+    outputs:
+      content:
+        description: 'The content of the read file'
+        value: ${{ jobs.read.outputs.content }}
 
 jobs:
   read:
@@ -38,7 +37,7 @@ jobs:
       - name: Read Content
         id: read_output
         run: |
-          content=$(cat ${{ github.workspace }}/${{ inputs.input1 }})
+          content=$(cat "${{ github.workspace }}/${{ inputs.input1 }}")
           echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo "$content" >> $GITHUB_OUTPUT
+          echo "${content}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
