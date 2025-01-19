@@ -70,10 +70,10 @@ jobs:
           OPENAI_API_KEY: ${{ inputs.openai_api_key != '' && inputs.openai_api_key || secrets.OPENAI_API_KEY }}
         run: |
           python scripts/translate_strings.py \
-            --content "${{ inputs.content }}" \
+            --content '${{ inputs.content }}' \
             --languages '${{ inputs.languages }}' \
-            --model "${{ inputs.gpt_model }}" \
-            --instruction "${{ inputs.general_instruction }}"
+            --model '${{ inputs.gpt_model }}' \
+            --instruction '${{ inputs.general_instruction }}'
           
           # Assume the script outputs num_of_languages and tokens_count_used
           # Write these outputs to $GITHUB_OUTPUT
