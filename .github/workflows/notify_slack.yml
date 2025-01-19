@@ -33,7 +33,7 @@ jobs:
   send_slack_notification:
     runs-on: ubuntu-latest
     steps:
-      ## 1. CHeck if secret is available
+      ## 1. Check if secret is available
       - name: Ensure SLACK_WEBHOOK_URL is set
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
@@ -44,21 +44,21 @@ jobs:
           fi
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      ## 2. Send notification to slack
+
+      ## 2. Send notification to Slack
       - name: Send Slack notification
-        # Use the Slack action to send a notification
         uses: 8398a7/action-slack@v3
         with:
-          # Set the status of the job (e.g., success, failure)
           status: ${{ job.status }}
-          # Craft the message text to send to Slack
-          text: |
-            Babel translation complete.
-            Number of languages translated: ${{ inputs.num_of_languages }}
-            Tokens used: ${{ inputs.tokens_count_used }} OpenAI tokens
-            Testing completed: ${{ inputs.unit_test_success }}
-          # Use the provided Slack webhook URL or a secret if not supplied
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          fields: |
+            {
+              "Babel translation complete.": "",
+              "Number of languages translated": "${{ inputs.num_of_languages }}",
+              "Tokens used": "${{ inputs.tokens_count_used }} OpenAI tokens",
+              "Testing completed": "${{ inputs.unit_test_success }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 ## send slack-channel a notification
 ## get num_of_languages count from init params
