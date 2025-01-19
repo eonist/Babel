@@ -1,6 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS-blue.svg)]() 
 [![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange.svg?style=flat)]() 
+[![Operational](https://github.com/eonist/Babel/actions/workflows/main.yml/badge.svg)](https://github.com/eonist/Babel/actions/workflows/main.yml)
 
 # Babel
 
