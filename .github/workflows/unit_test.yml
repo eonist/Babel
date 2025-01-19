@@ -9,25 +9,16 @@ name: Swift Package CI
 
 on:
   workflow_call:
-    # Remove GITHUB_TOKEN from secrets
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run Unit Tests
-        id: run_tests
+      - name: Run Swift Build and Test
         run: |
+          swift build
           swift test
-          TEST_EXIT_CODE=$?
-          echo "Test exit code: $TEST_EXIT_CODE"
-          if [ $TEST_EXIT_CODE -eq 0 ]; then
-            echo "test_success=true" >> $GITHUB_OUTPUT
-          else
-            echo "test_success=false" >> $GITHUB_OUTPUT
-          fi
-        continue-on-error: true
 
 permissions:
   contents: write
