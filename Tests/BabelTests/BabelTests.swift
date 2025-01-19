@@ -11,4 +11,11 @@ class BabelTests: XCTestCase {
       let localizedString = "non_existent_key".localized(bundle: defaultBundle)
       XCTAssertEqual(localizedString, "non_existent_key", "Expected the key itself to be returned when localization is missing")
    }
+
+   // - Fixme: Add doc
+
+   func testLocalizationBundleForInvalidLanguage() {
+        let bundle = localizationBundle(forLanguage: "invalid_code")
+        XCTAssertNil(bundle, "Expected nil for an invalid language code")
+    }
 }

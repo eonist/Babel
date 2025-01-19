@@ -88,12 +88,14 @@ Babel allows you to automate the localization of your iOS or macOS app using AI.
 
    Add the Babel Swift Package to your app project by specifying your forked repository URL: `https://github.com/your-user-name/Babel`.
 
-4. **Configure Target Languages**
+4. **Configure translation instructions**
 
    Edit the `.github/workflows/main.yml` file to include your desired languages:
 
    ```yaml
-   languages = ["es", "fr", "de"]  # Modify as needed: "Spanish" (es), "French" (fr), "German" (de)
+   languages = ["es", "fr", "de"] # Modify as needed: "Spanish" (es), "French" (fr), "German" (de)
+   gpt_model: "gpt-4"  # You can also use models like "gpt-3.5-turbo" or "gpt-4-turbo" to reduce costs
+   general_instruction: "Please ensure the translations are accurate and contextually appropriate." # Instruction for the translation model to ensure quality. You can also provide a brief description of your app to ensure the tonality is accurate.
    ```
 
 5. **Push changes to trigger the translation workflow**
