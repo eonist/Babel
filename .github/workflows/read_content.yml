@@ -1,0 +1,50 @@
+## Purpose: Reads the content from the specified file (Resources/en.lproj/Localizable.strings) and outputs it for use in downstream jobs.
+## Inputs and Outputs:
+## - Input: input1 - the path to the file to read.
+## - Output: content - the content of the file.
+## Steps:
+## - Checks out the repository using actions/checkout@v3.
+## - Uses guibranco/github-file-reader-action-v2@latest to read the file content.
+## Action Item:
+## - Ensure that the file Resources/en.lproj/Localizable.strings exists in your repository and contains the strings to be localized.
+
+## Workflow: Read Content
+## Purpose: Reads the content from a specified file and outputs it for use in downstream jobs.
+
+name: Read Content
+
+on:
+  workflow_call:
+    inputs:
+      input1:
+        description: 'Path to the file to read'
+        required: true
+        type: string
+    secrets: inherit
+
+outputs:
+  content:
+    description: 'Content of the file read from the specified path'
+    value: ${{ jobs.reusable_job.outputs.file_content }}
+
+jobs:
+  reusable_job:
+    runs-on: ubuntu-latest
+    outputs:
+      file_content: ${{ steps.read_file.outputs.content }}
+    steps:
+      # Step 1: Checkout the repository to access files
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Read the file content
+      - name: Read file contents
+        id: read_file
+        uses: guibranco/github-file-reader-action-v2@latest
+        with:
+          path: ${{ inputs.input1 }}
+
+      # Step 3: Print the file contents to the console (optional)
+      - name: Print file contents
+        run: |
+          echo "${{ steps.read_file.outputs.content }}"

@@ -1,10 +1,15 @@
+## Purpose: Sends a notification to Slack upon completion of the other jobs.
+## Verification:
+## Workflow File: The notify_slack.yml uses the 8398a7/action-slack@v3 action to send messages to Slack.
+
 ## This workflow performs the following steps:
-## Defines Inputs: It accepts three inputs when the workflow is called:
-## num_of_languages: The count of languages translated.
-## tokens_count_used: The number of OpenAI tokens used.
-## unit_test_success: A boolean flag indicating if unit tests were successful.
+## Defines Inputs: It accepts four inputs when the workflow is called:
+## - num_of_languages: The count of languages translated.
+## - tokens_count_used: The number of OpenAI tokens used.
+## - unit_test_success: A boolean flag indicating if unit tests were successful.
+## - slack_webhook: The Slack webhook URL to send the notification.
 ## Sends Slack Notification: It uses the `8398a7/action-slack@v3` action to send a notification to your Slack channel with the provided details.
-## Note: Ensure that you have the SLACK_WEBHOOK_URL secret configured in your repository settings.
+## Note: Ensure that you have the correct Slack webhook URL when invoking this workflow.
 
 name: Notify Slack
 
@@ -23,21 +28,29 @@ on:
         description: 'Unit test success flag'
         required: true
         type: boolean
+      slack_webhook:
+        description: 'Slack webhook URL'
+        required: false
+        type: string
 
 jobs:
   send_slack_notification:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
+        # Use the Slack action to send a notification
         uses: 8398a7/action-slack@v3
         with:
+          # Set the status of the job (e.g., success, failure)
           status: ${{ job.status }}
+          # Craft the message text to send to Slack
           text: |
             Babel translation complete.
             Number of languages translated: ${{ inputs.num_of_languages }}
             Tokens used: ${{ inputs.tokens_count_used }} OpenAI tokens
             Testing completed: ${{ inputs.unit_test_success }}
-          webhook_url: "https://hooks.slack.com/services/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"
+          # Use the provided Slack webhook URL or a secret if not supplied
+          webhook_url: ${{ (inputs.slack_webhook != '') && inputs.slack_webhook || secrets.SLACK_WEBHOOK_URL }}
 
 ## send slack-channel a notification
 ## get num_of_languages count from init params
@@ -46,4 +59,4 @@ jobs:
 ## send payload to slack with:
 ## "Babel translation complete. num_of_languages was translated. tokens_count_used openAI tokens was used. Testing completed: unit_test_success"
 
-### we need unit_test_success, tokens_count_used, num_of_languages
+### we need unit_test_success, tokens_count_used, num_of_languages, slack_webhook

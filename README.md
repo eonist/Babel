@@ -1,10 +1,31 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+[![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS-blue.svg)]() 
+[![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange.svg?style=flat)]() 
+
 # Babel
 
-> Automatic AI language localisation
+> Automatic AI language localization
+
+<img width="256" alt="img" src="https://i.imgur.com/jIFdqFm.jpeg?raw=true">
+
+## Table of Contents
+
+- [Description](#description)
+- [Features](#features)
+- [Problem](#problem)
+- [Solution](#solution)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Obtain OpenAI API Key](#obtain-openai-api-key)
+- [Obtain Slack Webhook](#obtain-slack-webhook)
+- [Add Secrets to Repository Settings](#add-secrets-to-repository-settings)
+- [Alternative Solutions](#alternative-solutions)
+- [Support](#support)
+- [License](#license)
 
 ### Description:
 
-Babel automatically translates your app into desired languages using GitHub Actions. By providing your own OpenAI API key, translations are handled every time you update the `Resources/en.lproj/Localizable.strings` file in your Babel fork. Upon completion, a Slack notification is sent to inform you of the update. Additionally, your app will load the latest localizations automatically via Swift Package Manager (SPM) if you set up periodic daily releases.
+Babel automates the translation of your app's strings into multiple languages using OpenAI's GPT models and GitHub Actions. By updating your `Localizable.strings` file and pushing changes to your repository, Babel triggers a workflow that translates the strings, performs unit tests, and notifies you via Slack upon completion. This seamless integration allows your app to automatically include the latest localizations via Swift Package Manager (SPM), streamlining the deployment process.
 
 ### Features:
 
@@ -14,24 +35,54 @@ Babel automatically translates your app into desired languages using GitHub Acti
 - 🌍 **Supports All Languages**: Translate into any number of languages, from one to hundreds.
 - ✅ **Built-In Unit Tests**: Ensure reliability with comprehensive automated testing.
 - 🔔 **Slack Notifications on Completion**: Receive instant updates on translation status directly in Slack.
+- 📦 **Automatic Inclusion in Your App**: Translations are seamlessly included in your app projects that import the Babel SPM package fork. Auto-deploy to production at your own discretion.
+
 
 ### Problem:
 
-1. Manually translating your `Resources/en.lproj/Localizable.strings` file into multiple languages is tedious and time-consuming.
-2. Manual processes are error-prone and inefficient.
-3. Frequent translation updates require developers to maintain the pipeline, limiting who can manage translations.
+1. 📝 Manually translating your `Resources/en.lproj/Localizable.strings` file into multiple languages is tedious and time-consuming.
+2. 🐛 Manual processes are error-prone and inefficient.
+3. 🔄 Frequent translation updates require developers to maintain the pipeline, limiting who can manage translations.
 
 ### Solution:
 
-1. Leverage the power of OpenAI models, like GPT-3.5 and GPT-4, to automatically translate into one or hundreds of languages at scale.
-2. Integrate comprehensive language unit tests to ensure translations are reliable, receive Slack notifications upon success or failure, and block deployments if necessary.
-3. With Babel existing in its own fork, even non-developers can edit plain text and commit changes. Babel handles the rest, provided you have set up automatic deployments for the App Store or other platforms.
+1. 🤖 Leverage the power of OpenAI models, like GPT-3.5 and GPT-4, to automatically translate into one or hundreds of languages at scale.
+2. 🧪 Integrate comprehensive language unit tests to ensure translations are reliable, receive Slack notifications upon success or failure, and block deployments if necessary.
+3. 🦑 With Babel existing in its own fork, even non-developers can edit plain text and commit changes. Babel handles the rest, provided you have set up automatic deployments for the App Store or other platforms.
+
+
+### Prerequisites
+
+- **GitHub Account**: Ensure you have a GitHub account to fork repositories and set up actions.
+- **OpenAI Account**: Sign up for an OpenAI account and obtain an API key.
+- **Slack Workspace**: Have access to a Slack workspace where you can add apps and receive notifications.
+- **Xcode 15 or Later**: Required for Swift 5.9 and iOS 17 / macOS 14 development.
 
 ### Installation:
 
-1. Fork `https://github.com/eonist/Babel` to your own github user / org
-2. Obtain and add OPENAI_API_KEY, SLACK_WEBHOOK_URL in your repo-settings: 
-3. Add the SPM package to your app project: `https://github.com/username/Babel` in your package or xcode project
+1. **Fork the Repository**
+
+   Fork the [Babel repository](https://github.com/eonist/Babel) to your own GitHub user or organization.
+
+2. **Set Up Secrets**
+
+   Obtain your `OPENAI_API_KEY` and `SLACK_WEBHOOK_URL` (see [Obtain OpenAI API Key](#obtain-openai-api-key) and [Obtain Slack Webhook](#obtain-slack-webhook)) and add them as secrets in your repository settings (see [Add Secrets to Repository Settings](#add-secrets-to-repository-settings)).
+
+3. **Add Babel to Your Project**
+
+   Add the Babel Swift Package to your app project by specifying your forked repository URL: `https://github.com/your-user-name/Babel`.
+
+4. **Configure Target Languages**
+
+   Edit the `.github/workflows/main.yml` file to include your desired languages:
+
+   ```yaml
+   languages = ["es", "fr", "de"]  # Modify as needed: "Spanish" (es), "French" (fr), "German" (de)
+   ```
+
+5. **Set Up Automated Releases (Optional)**
+
+   For automatic inclusion of translations via Swift Package Manager (SPM), set up periodic daily releases to app-store in your repository settings.
 
 ### Example:
 
@@ -40,19 +91,26 @@ Babel automatically translates your app into desired languages using GitHub Acti
 import Babel
 
 #Preview {
-    Text("greeting_key", bundle: .module) // use your babel translations
-        .environment(\.locale, Locale(identifier: "en") // shows English translation
-    Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
-    Text("hello_world_key".localized()) // use your babel translations
-        .environment(\.locale, Locale(identifier: "ge") // shows German translation
+   VStack {
+      Text("greeting_key".localized()) // Use your Babel translations
+            .environment(\.locale, Locale(identifier: "en")) // Shows English translation
+
+      Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
+            .environment(\.locale, Locale(identifier: "fr")) // Shows French translation
+
+      Text("farewell_key".localized())
+            .environment(\.locale, Locale(identifier: "de")) // Shows German translation
+   }
 }
 ```
 
-**Your main localisation.strings file:**
+**Your main `Localizable.strings` file:**
+
 `Resources/en.lproj/Localizable.strings`
 
-**with content:**
-```
+**With content:**
+
+```README.md
 "hello_world_key" = "Hello, World!";
 "greeting_key" = "Welcome to our app!";
 "farewell_key" = "Thank you for using our app!";
@@ -60,19 +118,20 @@ import Babel
 
 Add desired languages to the `.github/workflows/main.yml` file:
 ```yml
-languages = ["es", "fr", "gr"] # Modify as needed "Spanish", "French", "German"
+languages = ["es", "fr", "de"] # Modify as needed "Spanish", "French", "German"
 ```
 
-**Output on translation complete**
+After running the workflow, the translations will be generated in:
+
 ```
 Resources/es.lproj/Localizable.strings
-Resources/gr.lproj/Localizable.strings
 Resources/fr.lproj/Localizable.strings
+Resources/de.lproj/Localizable.strings
 ```
 
 ### Obtain OpenAI API Key
 
-Follow these steps to get your OpenAI API key:
+Follow these steps to get your OPENAI_API_KEY:
 
 1. Visit [platform.openai.com](https://platform.openai.com) and log in or sign up.
 
@@ -90,7 +149,7 @@ Follow these steps to get your OpenAI API key:
 
 > **Note:** Ensure you've added a payment method in your account settings. It's recommended to use separate keys for different applications to enhance security.
 
-### Obtain Slack Webhook
+### Obtain Slack Webhook 
 
 Follow these steps to get your SLACK_WEBHOOK_URL:
 
@@ -111,12 +170,36 @@ Follow these steps to get your SLACK_WEBHOOK_URL:
    - After authorization, a unique Webhook URL will be generated.
    - It will look like: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
 
-> **Important Notes**
-> 
+> **Note:**
 > - Keep your Webhook URL secret, as it contains sensitive information.
 > - For GovSlack apps, use the `slack-gov.com` domain instead of `slack.com`.
 > - Customize webhook settings and message formatting as needed.
 
-By following these steps, you'll have your SLACK_WEBHOOK_URL ready for integration with external services or applications.
+## Add secrets to repo settings: (SLACK_WEBHOOK_URL and OPENAI_API_KEY)
 
+To add the secrets to a GitHub repository, follow these steps:
 
+1. Navigate to your repository on GitHub.
+2. Click on the "Settings" tab near the top of the page.
+3. In the left sidebar, under the "Security" section, click on "Secrets and variables," then select "Actions."
+4. Click on the "New repository secret" button.
+5. Enter a name for your secret in the "Name" field.
+6. In the "Value" field, enter the secret value you want to store.
+7. Click "Add secret" to save your new repository secret.
+
+> **Important Notes:**
+>
+> - Secrets are encrypted and only exposed to selected actions during runtime.
+> - Repository secrets are only accessible to repository collaborators.
+> - Avoid storing sensitive information directly in your repository code or GitHub Actions workflow files.
+> - You can update or remove secrets from the same settings page if needed.
+
+## Alternative solutions: 
+
+- [https://crowdin.com](https://crowdin.com) 
+- [https://phrase.com](https://phrase.com) 
+- [https://lokalise.com/](https://lokalise.com/) 
+
+## Support
+
+If you encounter any problems or have questions, feel free to [open an issue](https://github.com/your-user-name/Babel/issues) on GitHub.

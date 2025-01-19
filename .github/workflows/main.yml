@@ -5,67 +5,67 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  actions: read
+  workflows: read
+  pull-requests: write
 
 jobs:
+  # Job to read content from a specified file
   read_content:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Read Content
-        id: read_content_step
-        uses: ./.github/actions/read_content
-        with:
-          input1: "Resources/en.lproj/Localizable.strings"
-    outputs:
-      content: ${{ steps.read_content_step.outputs.content }}
+    name: Read Content
+    uses: ./.github/workflows/read_content.yml
+    with:
+      # The input file path to read
+      input1: "Resources/en.lproj/Localizable.strings"
 
   send_to_openai:
-    runs-on: ubuntu-latest
+    name: Send Data to OpenAI
     needs: read_content
-    steps:
-      - name: Send Data to OpenAI
-        id: send_openai_step
-        uses: ./.github/actions/send_to_openai
-        with:
-          content: "${{ needs.read_content.outputs.content }}"
-          languages: |
-            [
-              "es",
-              "fr",
-              "de"
-            ]
-          gpt_model: "gpt-4"
-          general_instruction: "Please ensure the translations are accurate and contextually appropriate."
-    outputs:
-      num_of_languages: ${{ steps.send_openai_step.outputs.num_of_languages }}
-      tokens_count_used: ${{ steps.send_openai_step.outputs.tokens_count_used }}
+    uses: ./.github/workflows/send_openai.yml
+    with:
+      # Content obtained from the read_content job's output
+      content: "${{ needs.read_content.outputs.content }}"
+      # List of target languages for translation
+      languages: |
+        [
+          "es",
+          "fr",
+          "de"
+        ]
+      # Specify the GPT model to use for translation
+      gpt_model: "gpt-4"
+      # Instruction for the translation model to ensure quality
+      general_instruction: "Please ensure the translations are accurate and contextually appropriate."
+      # OpenAI API key (debug only, remove this to use secret from GitHub OPENAI_API_KEY)
+      ## openai_api_key: "sk-proj-..."
 
   write_content:
-    runs-on: ubuntu-latest
+    name: Write Content
     needs: send_to_openai
-    steps:
-      - name: Write Content
-        uses: ./.github/actions/write_content
+    uses: ./.github/workflows/write_content.yml
 
   unit_test:
-    runs-on: ubuntu-latest
+    name: Run Unit Tests
     needs: write_content
-    steps:
-      - name: Run Unit Tests
-        id: unit_test_step
-        uses: ./.github/actions/unit_test
-    outputs:
-      test_success: ${{ steps.unit_test_step.outputs.test_success }}
+    uses: ./.github/workflows/unit_test.yml
 
   notify_slack:
-    runs-on: ubuntu-latest
+    name: Notify Slack
     needs:
       - unit_test
       - send_to_openai
-    steps:
-      - name: Notify Slack
-        uses: ./.github/actions/notify_slack
-        with:
-          num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"
-          tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
-          unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
- 
+    uses: ./.github/workflows/notify_slack.yml
+    with:
+      # Pass the number of languages translated
+      num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"
+      # Pass the token count used in the translation
+      tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
+      # Pass the result of the unit tests
+      unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
+      # Slack webhook URL (debug only, remove to use variable from GitHub secret SLACK_WEBHOOK_URL)
+      ## slack_webhook: "https://hooks.slack.com/services/.../..../...."

@@ -1,0 +1,77 @@
+## Purpose: Writes the translated content to the appropriate localization files.
+## Workflow File: The write_content.yml downloads the translations artifact and runs a Node.js script to create localization files.
+## Script Used: scripts/write_localizations.js
+## 1. Accept JSON input.
+## 2. Convert JSON to the desired format.
+## 3. Write each item's content to files named Localization-{{language_code}}.strings.
+## 4. Commit and push the changes.
+name: Write Content
+
+on:
+  workflow_call:
+    secrets: inherit
+
+jobs:
+  generate_localizations:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      # Step 1: Checkout the repository to access files
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Download the translations artifact from previous workflow
+      - name: Download translations artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: translations
+          path: ./artifacts
+
+      # Step 3: Extract the translations on non-Windows systems
+      - name: Extract translations (Linux)
+        if: ${{ runner.os != 'Windows' }}
+        run: |
+          tar -xzf ./artifacts/translations.tar.gz -C ./artifacts
+        shell: bash
+
+      # Step 4: Extract the translations on Windows systems
+      - name: Extract translations (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          Expand-Archive -Path ./artifacts/translations.tar.gz -DestinationPath ./artifacts
+        shell: powershell
+
+      # Step 5: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'  # Specify your required Node.js version
+
+      # Step 6: Create localization files using the extracted translations
+      - name: Create localization files
+        run: |
+          node scripts/write_localizations.js ./artifacts/translations.json
+
+      # Step 7: Configure Git with user information
+      - name: Configure Git
+        ## sets the Git username to the GitHub username of the person or bot that triggered the workflow15.
+        ## git config --global user.email   github.actor  @users.noreply.github.com" sets the Git email address to a no-reply email associated with the GitHub actor's account18.
+        ## These commands ensure that any commits made during the workflow are properly attributed to the user or bot that initiated the action. The --global flag applies these settings to all Git operations within the workflow environment12.
+        ## The github.actor  is a GitHub Actions context variable that represents the username of the account that triggered the workflow run. By using this variable, the workflow dynamically sets the Git identity based on who initiated the action, maintaining accurate authorship information for automated commits58.
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      # Step 8: Commit and Push changes
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'Update localization files via GitHub Actions'
+          branch: main
+          file_pattern: 'Resources/**'
+
+
+          

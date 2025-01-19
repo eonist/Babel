@@ -1,0 +1,85 @@
+## Purpose: Sends the content to OpenAI for translation into specified languages.
+## Inputs:
+## - content
+## - languages
+## - gpt_model (defaulted to gpt-4)
+## - general_instruction
+## - openai_api_key (optional, defaults to secrets.OPENAI_API_KEY)
+## Steps:
+## - Sets up Python.
+## - Installs the OpenAI Python library.
+## - Runs scripts/translate_strings.py.
+
+name: Translate Localizable.strings
+
+on:
+  workflow_call:
+    inputs:
+      content:
+        required: true
+        type: string
+      languages:
+        required: true
+        type: string
+      gpt_model:
+        required: false
+        type: string
+        default: "gpt-4"
+      general_instruction:
+        required: false
+        type: string
+        default: ""
+      openai_api_key:
+        required: false
+        type: string
+
+jobs:
+  translate_strings:
+    runs-on: ubuntu-latest
+    outputs:
+      translations-path: ${{ steps.upload-translations.outputs.artifact-path }}
+      num_of_languages: ${{ steps.translate.outputs.num_of_languages }}
+      tokens_count_used: ${{ steps.translate.outputs.tokens_count_used }}
+    steps:
+      ## Step 1: Checkout the repository to access scripts and resources
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      ## Step 2: Set up Python environment
+      - name: Set up Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      ## Step 3: Install Python dependencies required for the translation script
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai
+
+      ## Step 4: Run the translation script using OpenAI API
+      - name: Translate strings using OpenAI API
+        id: translate
+        env:
+          # Use the provided OpenAI API key or fallback to the secret
+          OPENAI_API_KEY: ${{ inputs.openai_api_key != '' && inputs.openai_api_key || secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/translate_strings.py \
+            --content "${{ inputs.content }}" \
+            --languages '${{ inputs.languages }}' \
+            --model "${{ inputs.gpt_model }}" \
+            --instruction "${{ inputs.general_instruction }}"
+          
+          # Assume the script outputs num_of_languages and tokens_count_used
+          # Write these outputs to $GITHUB_OUTPUT
+          echo "num_of_languages=$(cat num_of_languages.txt)" >> $GITHUB_OUTPUT
+          echo "tokens_count_used=$(cat tokens_count_used.txt)" >> $GITHUB_OUTPUT
+
+      ## Step 5: Upload the translation results as an artifact for use in downstream jobs
+      - name: Upload translations as artifact
+        id: upload-translations
+        uses: actions/upload-artifact@v3
+        with:
+          name: translations
+          path: translations.json
+

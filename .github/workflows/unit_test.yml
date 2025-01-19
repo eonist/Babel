@@ -1,0 +1,41 @@
+## Purpose: Runs unit tests on the new localization files to ensure they are valid.
+## Verification:
+## Workflow File: The unit_test.yml aims to run Swift unit tests and output the success status.
+
+## run swift build and test for the Package.swift
+## return success or failure
+
+name: Swift Package CI
+
+on:
+  workflow_call:
+    secrets: inherit
+    outputs:
+      test_success:
+        description: 'Indicates if unit tests passed or failed'
+        value: ${{ jobs.run_tests.outputs.test_success }}
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    outputs:
+      test_success: ${{ steps.run_tests.outputs.test_success }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run Unit Tests
+        id: run_tests
+        run: |
+          swift test
+          TEST_EXIT_CODE=$?
+          echo "Test exit code: $TEST_EXIT_CODE"
+          if [ $TEST_EXIT_CODE -eq 0 ]; then
+            echo "test_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "test_success=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+permissions:
+  contents: write

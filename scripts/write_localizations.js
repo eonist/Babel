@@ -1,22 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read the localization JSON data
-const data = fs.readFileSync('localization.json', 'utf8');
-const localizations = JSON.parse(data);
+// Get the translations file path from command-line arguments
+const translationsFilePath = process.argv[2];
 
-// Process each language
-for (const [language, translations] of Object.entries(localizations)) {
-  const lines = translations.map(item => {
-    const [key, value] = Object.entries(item)[0];
-    return `"${key}" = "${value}";`;
-  });
+if (!translationsFilePath) {
+  console.error('Please provide the path to translations.json');
+  process.exit(1);
+}
 
-  const content = lines.join('\n');
-  const filename = `Localization-${language}.strings`;
+try {
+  // Read the localization JSON data
+  const data = fs.readFileSync(translationsFilePath, 'utf8');
+  const localizations = JSON.parse(data);
 
-  // Write the content to the file in the repository root
-  fs.writeFileSync(path.join(process.cwd(), filename), content, 'utf8');
+  // Process each language
+  for (const [language, content] of Object.entries(localizations)) {
+    const dirPath = `Resources/${language}.lproj`;
+    const filePath = path.join(dirPath, 'Localizable.strings');
 
-  console.log(`Created ${filename}`);
-} 
+    // Create directory if it doesn't exist
+    fs.mkdirSync(dirPath, { recursive: true });
+
+    // Write the content to the localization file
+    fs.writeFileSync(filePath, content, 'utf8');
+
+    console.log(`Created ${filePath}`);
+  }
+} catch (error) {
+  console.error(`An error occurred: ${error.message}`);
+  process.exit(1);
+}
