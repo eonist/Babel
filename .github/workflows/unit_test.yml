@@ -12,7 +12,7 @@ on:
     outputs:
       test_success:
         description: 'Whether the unit tests succeeded'
-        value: ${{ jobs.test.outputs.test_success }}
+        value: ${{ jobs.test.outputs.test_success == 'true' }}
 
 jobs:
   test:
