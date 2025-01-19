@@ -12,13 +12,13 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Run Swift Build and Test
-        run: |
-          swift build
-          swift test
+      - uses: actions/checkout@v2
+      - name: Build
+        run: swift build -v
+      - name: Run tests
+        run: swift test -v
 
 permissions:
   contents: write

@@ -23,9 +23,11 @@ if let frenchBundle = localizationBundle(forLanguage: "fr") {
 
 // Test that things work
 #Preview {
-    Text("greeting_key", bundle: .module) // use your babel translations
-        .environment(\.locale, Locale(identifier: "en")) // shows English translation
-    Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
-    Text("hello_world_key".localized()) // use your babel translations
-        .environment(\.locale, Locale(identifier: "de")) // shows German translation
+    VStack {
+        Text("greeting_key", bundle: .module) // use your babel translations
+            .environment(\.locale, Locale(identifier: "en")) // shows English translation
+        Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
+        Text("hello_world_key".localized()) // use your babel translations
+            .environment(\.locale, Locale(identifier: "de")) // shows German translation
+    }
 }
