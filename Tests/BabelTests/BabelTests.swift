@@ -1,10 +1,11 @@
 import XCTest
-@testable import Babel
+import Babel
 
 class BabelTests: XCTestCase {
-    func testExample() throws {
-        // Write your test here and use APIs like `XCTAssert(...)` to check expected conditions.
-        XCTAssertTrue(true == Optional(true)) // placeholder code for now
-        // Additional tests can be added here.
-    }
+   func testLocalizedStringForMissingKey() {
+      // Test that the key is returned when the localization is missing
+      let defaultBundle = Bundle.babelModule
+      let localizedString = "non_existent_key".localized(bundle: defaultBundle)
+      XCTAssertEqual(localizedString, "non_existent_key", "Expected the key itself to be returned when localization is missing")
+   }
 }
