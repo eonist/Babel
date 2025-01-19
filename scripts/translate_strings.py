@@ -49,7 +49,7 @@ def main():
 
             for attempt in range(MAX_RETRIES):
                 try:
-                    response = openai.ChatCompletion.create(
+                    response = openai.create_chat_completion(
                         model=args.model,
                         messages=[{"role": "user", "content": prompt}],
                         temperature=0.3,
