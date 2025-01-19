@@ -148,7 +148,8 @@ Follow these steps to get your OPENAI_API_KEY:
 
 7. Copy and securely store your API key immediately, as it won't be shown again.
 
-> **Note:** Ensure you've added a payment method in your account settings. It's recommended to use separate keys for different applications to enhance security.
+> [!NOTE]
+> Ensure you've added a payment method in your account settings. It's recommended to use separate keys for different applications to enhance security.
 
 ### Obtain Slack Webhook 
 
@@ -171,7 +172,7 @@ Follow these steps to get your SLACK_WEBHOOK_URL:
    - After authorization, a unique Webhook URL will be generated.
    - It will look like: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`
 
-> **Note:**
+> [!NOTE]
 > - Keep your Webhook URL secret, as it contains sensitive information.
 > - For GovSlack apps, use the `slack-gov.com` domain instead of `slack.com`.
 > - Customize webhook settings and message formatting as needed.
@@ -188,7 +189,8 @@ To add the secrets to a GitHub repository, follow these steps:
 6. In the "Value" field, enter the secret value you want to store.
 7. Click "Add secret" to save your new repository secret. (SLACK_WEBHOOK_URL and OPENAI_API_KEY)
 
-> **Important Notes:**
+
+> [!IMPORTANT]
 >
 > - Secrets are encrypted and only exposed to selected actions during runtime.
 > - Repository secrets are only accessible to repository collaborators.
