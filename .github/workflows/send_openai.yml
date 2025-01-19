@@ -62,7 +62,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install openai
 
-      ## Step 4: Run the translation script using OpenAI API
+      ## Step 4: Check if OPENAI_API_KEY secret is available
+      - name: Verify OPENAI_API_KEY availability
+        run: |
+          if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+            echo "OPENAI_API_KEY is not available."
+            exit 1
+          else
+            echo "OPENAI_API_KEY is available."
+          fi
+
+      ## Step 5: Run the translation script using OpenAI API
       - name: Translate strings using OpenAI API
         id: translation
         env:
@@ -79,7 +89,7 @@ jobs:
           echo "num_of_languages=$(cat num_of_languages.txt)" >> $GITHUB_OUTPUT
           echo "tokens_count_used=$(cat tokens_count_used.txt)" >> $GITHUB_OUTPUT
 
-      ## Step 5: Upload the translation results as an artifact for use in downstream jobs
+      ## Step 6: Upload the translation results as an artifact for use in downstream jobs
       - name: Upload translations as artifact
         id: upload-translations
         uses: actions/upload-artifact@v3
