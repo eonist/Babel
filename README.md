@@ -90,7 +90,7 @@ Babel allows you to automate the localization of your iOS or macOS app using AI.
 
 4. **Configure translation instructions**
 
-   Edit the `.github/workflows/main.yml` file to include your desired languages:
+   Edit the `.github/workflows/main.yml` file to include your desired translation settings:
 
    ```yaml
    languages = ["es", "fr", "de"] # Modify as needed: "Spanish" (es), "French" (fr), "German" (de)
