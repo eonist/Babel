@@ -33,14 +33,15 @@ jobs:
   send_slack_notification:
     runs-on: ubuntu-latest
     steps:
-      ## 1. Check if secret is available
+      ## 1. Check if secret is available and print the length
       - name: Ensure SLACK_WEBHOOK_URL is set
         run: |
           if [ -z "$SLACK_WEBHOOK_URL" ]; then
             echo "::error::SLACK_WEBHOOK_URL secret is not set."
             exit 1
           else
-            echo "SLACK_WEBHOOK_URL secret is available."
+            length=${#SLACK_WEBHOOK_URL}
+            echo "SLACK_WEBHOOK_URL secret is available and has length: $length characters."
           fi
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
