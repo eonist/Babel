@@ -40,18 +40,19 @@ jobs:
       gpt_model: "gpt-4"
       # Instruction for the translation model to ensure quality
       general_instruction: "Please ensure the translations are accurate and contextually appropriate."
+    secrets: inherit
 
   write_content:
     name: Write Content
     needs: send_to_openai
     uses: ./.github/workflows/write_content.yml
+    secrets: inherit
 
   unit_test:
     name: Run Unit Tests
     needs: write_content
     uses: ./.github/workflows/unit_test.yml
-    ## secrets:
-      ## GITHUB_TOKEN: inherit
+    secrets: inherit
 
   notify_slack:
     name: Notify Slack
@@ -66,5 +67,6 @@ jobs:
       tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
       # Pass the result of the unit tests
       unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
+    secrets: inherit
 
  
