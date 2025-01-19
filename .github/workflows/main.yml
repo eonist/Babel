@@ -9,9 +9,8 @@ on:
       - main  # Trigger the workflow on pull requests targeting the 'main' branch
 
 permissions:
-  contents: write        # Grants write access to repository contents
-  pull-requests: write   # Grants write access to pull requests
-  # Add other necessary permissions as needed
+  contents: write  # Needed for writing to the repository
+  pull-requests: write  # Needed if you're updating PRs
 
 jobs:
   # Job to read content from a specified file
@@ -76,5 +75,5 @@ jobs:
       # Pass the token count used in the translation
       tokens_count_used: ${{ needs.send_to_openai.outputs.tokens_count_used }}  # Total tokens used during translation
       # Pass the result of the unit tests
-      unit_test_success: ${{ needs.unit_test.outputs.test_success }}  # Whether unit tests passed
+      unit_test_success: ${{ needs.unit_test.outputs.test_success == 'true' }}  # Whether unit tests passed
     secrets: inherit  # Important or else secrets aren't found in the sub-workflow
