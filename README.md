@@ -228,9 +228,9 @@ If you encounter any problems or have questions, feel free to [open an issue](ht
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Official github markdown badge
+## Official GitHub Markdown Badge
 
-When using babel for translations (not required)
+For extra points, be sure to add this sweet GitHub badge to your open-source projects using Babel for translations 😸
 
 [![Babel-localisation](https://img.shields.io/badge/Babel-localisation-purple)](https://github.com/eonist/babel) 
 

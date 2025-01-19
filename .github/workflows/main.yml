@@ -35,9 +35,9 @@ jobs:
       # List of target languages for translation
       languages: |
         [
-          "es",  # Spanish
-          "fr",  # French
-          "de"   # German
+          "es",
+          "fr",
+          "de"
         ]
       # Specify the GPT model to use for translation
       # You can also use models like "gpt-3.5-turbo" or "gpt-4-turbo" to reduce costs
