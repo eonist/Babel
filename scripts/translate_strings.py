@@ -1,11 +1,11 @@
 import argparse
 import openai
 from openai import OpenAIError
-## from openai.error import OpenAIError
 import json
 import os
 import sys
 import time
+from openai import OpenAI
 
 def main():
     try:
@@ -30,19 +30,21 @@ def main():
             print("Content to translate is empty.")
             sys.exit(1)
 
-        # Set the OpenAI API key
-        openai.api_key = os.environ.get("OPENAI_API_KEY")
-        if not openai.api_key:
+        # Set up OpenAI client
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
             raise ValueError("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
+
+        client = OpenAI(api_key=api_key)
 
         translations = {}
         total_tokens_used = 0
 
         for language in languages:
             prompt = (
-                f"{args.instruction}\n"
+                f"{args.instruction.strip()}\n"
                 f"Translate the following content into {language}:\n\n"
-                f"{args.content}\n\n"
+                f"{args.content.strip()}\n\n"
                 "Provide the translation in the same format."
             )
 
@@ -50,7 +52,7 @@ def main():
 
             for attempt in range(MAX_RETRIES):
                 try:
-                    response = openai.create_chat_completion(
+                    response = client.chat.completions.create(
                         model=args.model,
                         messages=[{"role": "user", "content": prompt}],
                         temperature=0.3,
@@ -64,7 +66,7 @@ def main():
                     break  # Exit the retry loop if successful
                 except OpenAIError as e:
                     if attempt < MAX_RETRIES - 1:
-                        wait_time = 2 ** attempt
+                        wait_time = min(2 ** attempt, 60)  # Cap the wait time at 60 seconds
                         print(f"Error: {e}. Retrying in {wait_time} seconds...")
                         time.sleep(wait_time)  # Exponential backoff
                         continue
