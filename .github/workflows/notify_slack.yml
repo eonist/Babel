@@ -33,6 +33,18 @@ jobs:
   send_slack_notification:
     runs-on: ubuntu-latest
     steps:
+      ## 1. CHeck if secret is available
+      - name: Ensure SLACK_WEBHOOK_URL is set
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "::error::SLACK_WEBHOOK_URL secret is not set."
+            exit 1
+          else
+            echo "SLACK_WEBHOOK_URL secret is available."
+          fi
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      ## 2. Send notification to slack
       - name: Send Slack notification
         # Use the Slack action to send a notification
         uses: 8398a7/action-slack@v3

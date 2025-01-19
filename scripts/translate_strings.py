@@ -1,5 +1,6 @@
 import argparse
 import openai
+from openai.error import OpenAIError
 import json
 import os
 import sys
@@ -60,7 +61,7 @@ def main():
                     total_tokens_used += response['usage']['total_tokens']
 
                     break  # Exit the retry loop if successful
-                except openai.error.OpenAIError as e:
+                except OpenAIError as e:
                     if attempt < MAX_RETRIES - 1:
                         wait_time = 2 ** attempt
                         print(f"Error: {e}. Retrying in {wait_time} seconds...")

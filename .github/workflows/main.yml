@@ -67,6 +67,6 @@ jobs:
       tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
       # Pass the result of the unit tests
       unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
-    secrets: inherit
+    secrets: inherit ## Important or else secret isnt found in sub workflow
 
  
