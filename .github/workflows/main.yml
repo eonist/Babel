@@ -40,8 +40,6 @@ jobs:
       gpt_model: "gpt-4"
       # Instruction for the translation model to ensure quality
       general_instruction: "Please ensure the translations are accurate and contextually appropriate."
-      # OpenAI API key (debug only, remove this to use secret from GitHub OPENAI_API_KEY)
-      ## openai_api_key: "sk-proj-..."
 
   write_content:
     name: Write Content
@@ -68,7 +66,5 @@ jobs:
       tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"
       # Pass the result of the unit tests
       unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
-      # Slack webhook URL (debug only, remove to use variable from GitHub secret SLACK_WEBHOOK_URL)
-      ## slack_webhook: "https://hooks.slack.com/services/.../..../...."
 
  

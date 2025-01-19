@@ -28,10 +28,6 @@ on:
         description: 'Unit test success flag'
         required: true
         type: boolean
-      slack_webhook:
-        description: 'Slack webhook URL'
-        required: false
-        type: string
 
 jobs:
   send_slack_notification:
@@ -50,7 +46,7 @@ jobs:
             Tokens used: ${{ inputs.tokens_count_used }} OpenAI tokens
             Testing completed: ${{ inputs.unit_test_success }}
           # Use the provided Slack webhook URL or a secret if not supplied
-          webhook_url: ${{ (inputs.slack_webhook != '') && inputs.slack_webhook || secrets.SLACK_WEBHOOK_URL }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 ## send slack-channel a notification
 ## get num_of_languages count from init params

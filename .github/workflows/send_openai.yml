@@ -31,10 +31,6 @@ on:
         description: 'Instruction for translation'
         required: true
         type: string
-      openai_api_key:
-        description: 'open ai api key'
-        required: false
-        type: string
     outputs:
       num_of_languages:
         description: 'Number of languages translated'
