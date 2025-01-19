@@ -31,7 +31,7 @@ jobs:
     uses: ./.github/workflows/send_openai.yml  # Reusable workflow to interact with OpenAI API
     with:
       # Content obtained from the read_content job's output
-      content: "${{ needs.read_content.outputs.content }}"  # Uses the content output from 'read_content' job
+      content: ${{ needs.read_content.outputs.content }}  # Uses the content output from 'read_content' job
       # List of target languages for translation
       languages: |
         [
@@ -72,9 +72,9 @@ jobs:
     uses: ./.github/workflows/notify_slack.yml  # Reusable workflow to send notifications to Slack
     with:
       # Pass the number of languages translated
-      num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"  # Number of languages processed
+      num_of_languages: ${{ needs.send_to_openai.outputs.num_of_languages }}  # Number of languages processed
       # Pass the token count used in the translation
-      tokens_count_used: "${{ needs.send_to_openai.outputs.tokens_count_used }}"  # Total tokens used during translation
+      tokens_count_used: ${{ needs.send_to_openai.outputs.tokens_count_used }}  # Total tokens used during translation
       # Pass the result of the unit tests
-      unit_test_success: "${{ needs.unit_test.outputs.test_success == 'true' }}"  # Whether unit tests passed
+      unit_test_success: ${{ needs.unit_test.outputs.test_success }}  # Whether unit tests passed
     secrets: inherit  # Important or else secrets aren't found in the sub-workflow
