@@ -17,7 +17,7 @@ jobs:
   # Job to read content from a specified file
   read_content:
     name: Read Content
-    uses: ./.github/workflows/read_content.yml
+    uses: ./.github/workflows/read_content.yml@v1
     with:
       # The input file path to read
       input1: "Resources/en.lproj/Localizable.strings"
@@ -25,7 +25,7 @@ jobs:
   send_to_openai:
     name: Send Data to OpenAI
     needs: read_content
-    uses: ./.github/workflows/send_openai.yml
+    uses: ./.github/workflows/send_openai.yml@v1
     with:
       # Content obtained from the read_content job's output
       content: "${{ needs.read_content.outputs.content }}"
@@ -46,12 +46,12 @@ jobs:
   write_content:
     name: Write Content
     needs: send_to_openai
-    uses: ./.github/workflows/write_content.yml
+    uses: ./.github/workflows/write_content.yml@v1
 
   unit_test:
     name: Run Unit Tests
     needs: write_content
-    uses: eonist/Babel/.github/workflows/unit_test.yml
+    uses: eonist/Babel/.github/workflows/unit_test.yml@v1
     secrets:
       GITHUB_TOKEN: inherit
 
@@ -60,7 +60,7 @@ jobs:
     needs:
       - unit_test
       - send_to_openai
-    uses: ./.github/workflows/notify_slack.yml
+    uses: ./.github/workflows/notify_slack.yml@v1
     with:
       # Pass the number of languages translated
       num_of_languages: "${{ needs.send_to_openai.outputs.num_of_languages }}"
@@ -70,3 +70,5 @@ jobs:
       unit_test_success: "${{ needs.unit_test.outputs.test_success }}"
       # Slack webhook URL (debug only, remove to use variable from GitHub secret SLACK_WEBHOOK_URL)
       ## slack_webhook: "https://hooks.slack.com/services/.../..../...."
+
+ 
