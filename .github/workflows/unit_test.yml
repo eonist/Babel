@@ -9,10 +9,16 @@ name: Swift Package CI
 
 on:
   workflow_call:
+    outputs:
+      test_success:
+        description: 'Whether the unit tests succeeded'
+        value: ${{ jobs.test.outputs.test_success }}
 
 jobs:
   test:
     runs-on: macos-latest
+    outputs:
+      test_success: ${{ steps.set_unit_test_success.outputs.unit_test_success }}
     steps:
       - uses: actions/checkout@v3
 
@@ -28,5 +34,16 @@ jobs:
         run: swift build -v --configuration release
 
       - name: Run tests
+        id: run_tests
         run: swift test -v --configuration release
+        continue-on-error: true
+
+      - name: Set unit_test_success
+        id: set_unit_test_success
+        run: |
+          if [ "${{ steps.run_tests.outcome }}" == "success" ]; then
+            echo "unit_test_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "unit_test_success=false" >> $GITHUB_OUTPUT
+          fi
 
