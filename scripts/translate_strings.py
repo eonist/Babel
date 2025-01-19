@@ -57,11 +57,11 @@ def main():
                         messages=[{"role": "user", "content": prompt}],
                         temperature=0.3,
                     )
-                    translated_text = response['choices'][0]['message']['content'].strip()
+                    translated_text = response.choices[0].message.content.strip()
                     translations[language] = translated_text
 
                     # Accumulate token usage
-                    total_tokens_used += response['usage']['total_tokens']
+                    total_tokens_used += response.usage.total_tokens
 
                     break  # Exit the retry loop if successful
                 except OpenAIError as e:
