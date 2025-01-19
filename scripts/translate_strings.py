@@ -31,8 +31,7 @@ def main():
         # Prepare OpenAI API
         openai.api_key = os.getenv("OPENAI_API_KEY")
         if not openai.api_key:
-            print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
-            sys.exit(1)
+            raise EnvironmentError("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
         translations = {}
         total_tokens_used = 0
