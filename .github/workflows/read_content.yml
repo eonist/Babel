@@ -1,4 +1,4 @@
-## Purpose: Reads the content from the specified file (Resources/en.lproj/Localizable.strings) and outputs it for use in downstream jobs.
+## Purpose: Reads the content from the specified file (Sources/Babel/Resources/en.lproj/Localizable.strings) and outputs it for use in downstream jobs.
 ## Inputs and Outputs:
 ## - Input: input1 - the path to the file to read.
 ## - Output: content - the content of the file.
@@ -6,7 +6,7 @@
 ## - Checks out the repository using actions/checkout@v3.
 ## - Uses guibranco/github-file-reader-action-v2@latest to read the file content.
 ## Action Item:
-## - Ensure that the file Resources/en.lproj/Localizable.strings exists in your repository and contains the strings to be localized.
+## - Ensure that the file Sources/Babel/Resources/en.lproj/Localizable.strings exists in your repository and contains the strings to be localized.
 
 ## Workflow: Read Content
 ## Purpose: Reads the content from a specified file and outputs it for use in downstream jobs.

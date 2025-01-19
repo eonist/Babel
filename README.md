@@ -107,7 +107,7 @@ import Babel
 
 **Your main `Localizable.strings` file:**
 
-`Resources/en.lproj/Localizable.strings`
+`Sources/Babel/Resources/en.lproj/Localizable.strings`
 
 **With content:**
 
@@ -125,9 +125,9 @@ languages = ["es", "fr", "de"] # Modify as needed "Spanish", "French", "German"
 After running the workflow, the translations will be generated in:
 
 ```
-Resources/es.lproj/Localizable.strings
-Resources/fr.lproj/Localizable.strings
-Resources/de.lproj/Localizable.strings
+Sources/Babel/Resources/es.lproj/Localizable.strings
+Sources/Babel/Resources/fr.lproj/Localizable.strings
+Sources/Babel/Resources/de.lproj/Localizable.strings
 ```
 
 ### Obtain OpenAI API Key

@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/read_content.yml
     with:
       # The input file path to read
-      input1: "Resources/en.lproj/Localizable.strings"
+      input1: "Sources/Babel/Resources/en.lproj/Localizable.strings"
 
   send_to_openai:
     name: Send Data to OpenAI

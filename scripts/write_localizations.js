@@ -16,7 +16,7 @@ try {
 
   // Process each language
   for (const [language, content] of Object.entries(localizations)) {
-    const dirPath = `Resources/${language}.lproj`;
+    const dirPath = `Sources/Babel/Resources/${language}.lproj`;
     const filePath = path.join(dirPath, 'Localizable.strings');
 
     // Create directory if it doesn't exist

@@ -2,6 +2,9 @@ import XCTest
 import Babel
 
 class BabelTests: XCTestCase {
+   
+   // basically just test if bableModule can be imported
+   
    func testLocalizedStringForMissingKey() {
       // Test that the key is returned when the localization is missing
       let defaultBundle = Bundle.babelModule

@@ -53,7 +53,7 @@ jobs:
         with:
           commit_message: 'Update localization files via GitHub Actions'
           branch: main
-          file_pattern: 'Resources/**'
+          file_pattern: 'Sources/Babel/Resources/**'
 
 
           
