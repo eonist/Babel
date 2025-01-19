@@ -70,8 +70,7 @@ jobs:
       - name: Translate strings using OpenAI API
         id: translation
         env:
-          # Use the provided OpenAI API key or fallback to the secret
-          OPENAI_API_KEY: ${{ inputs.openai_api_key != '' && inputs.openai_api_key || secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python scripts/translate_strings.py \
             --content '${{ inputs.content }}' \
