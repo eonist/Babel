@@ -28,6 +28,13 @@
 
 Babel automates the translation of your app's strings into multiple languages using OpenAI's GPT models and GitHub Actions. By updating your `Localizable.strings` file and pushing changes to your repository, Babel triggers a workflow that translates the strings, performs unit tests, and notifies you via Slack upon completion. This seamless integration allows your app to automatically include the latest localizations via Swift Package Manager (SPM), streamlining the deployment process.
 
+**1. Trigger the github action flow:**
+
+**2. Get notified on Slack:**
+
+**3. Translations go live in your app:**
+<img width="287" alt="img" src="https://i.imgur.com/cEB5DJU.gif?raw=true">
+
 ### Features:
 
 - 🔑 **Bring Your Own OpenAI Key**: Use your personal OpenAI API key for secure and controlled access.
