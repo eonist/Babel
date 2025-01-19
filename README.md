@@ -1,6 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS-blue.svg)]() 
 [![Swift 5.9](https://img.shields.io/badge/Swift-5.9-orange.svg?style=flat)]() 
+[![Operational](https://github.com/eonist/Babel/actions/workflows/main.yml/badge.svg)](https://github.com/eonist/Babel/actions/workflows/main.yml)
 
 # Babel
 
@@ -175,7 +176,7 @@ Follow these steps to get your SLACK_WEBHOOK_URL:
 > - For GovSlack apps, use the `slack-gov.com` domain instead of `slack.com`.
 > - Customize webhook settings and message formatting as needed.
 
-## Add secrets to repo settings: (SLACK_WEBHOOK_URL and OPENAI_API_KEY)
+## Add secrets to repo settings:
 
 To add the secrets to a GitHub repository, follow these steps:
 
@@ -185,7 +186,7 @@ To add the secrets to a GitHub repository, follow these steps:
 4. Click on the "New repository secret" button.
 5. Enter a name for your secret in the "Name" field.
 6. In the "Value" field, enter the secret value you want to store.
-7. Click "Add secret" to save your new repository secret.
+7. Click "Add secret" to save your new repository secret. (SLACK_WEBHOOK_URL and OPENAI_API_KEY)
 
 > **Important Notes:**
 >
