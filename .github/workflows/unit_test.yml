@@ -14,11 +14,19 @@ jobs:
   test:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        run: swift build -v
-      - name: Run tests
-        run: swift test -v
+      - uses: actions/checkout@v3
 
-permissions:
-  contents: write
+      - name: Cache Swift Packages
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-swift-packages-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swift-packages-
+
+      - name: Build
+        run: swift build -v --configuration release
+
+      - name: Run tests
+        run: swift test -v --configuration release
+

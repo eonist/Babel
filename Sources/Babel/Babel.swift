@@ -1,10 +1,22 @@
+import Foundation
+import Foundation
 import SwiftUI
 
-// Convenient localization string extension 
+extension Bundle {
+   public static var babelModule: Bundle {
+      return Bundle.module
+   }
+}
+
+// Convenient localization string extension
 extension String {
-    public func localized(comment: String = "", bundle: Bundle = .module) -> String {
-        NSLocalizedString(self, bundle: bundle, comment: comment)
-    }
+   public func localized(comment: String = "", bundle: Bundle = .babelModule) -> String {
+      NSLocalizedString(self, bundle: bundle, comment: comment)
+   }
+   public func localized(comment: String = "", langCode: String = "en") -> String {
+      let bundle = localizationBundle(forLanguage: langCode) ?? .babelModule
+      return NSLocalizedString(self, bundle: bundle, comment: comment)
+   }
 }
 
 // Helper function to access localization bundles
@@ -14,20 +26,4 @@ public func localizationBundle(forLanguage language: String) -> Bundle? {
    } else {
       return nil
    }
-}
-
-// Example usage
-if let frenchBundle = localizationBundle(forLanguage: "fr") {
-    print(NSLocalizedString("hello_world_key", bundle: frenchBundle, comment: ""))
-}
-
-// Test that things work
-#Preview {
-    VStack {
-        Text("greeting_key", bundle: .module) // use your babel translations
-            .environment(\.locale, Locale(identifier: "en")) // shows English translation
-        Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "fr") ?? .module))
-        Text("hello_world_key".localized()) // use your babel translations
-            .environment(\.locale, Locale(identifier: "de")) // shows German translation
-    }
 }
