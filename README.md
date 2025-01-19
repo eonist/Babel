@@ -227,3 +227,13 @@ If you encounter any problems or have questions, feel free to [open an issue](ht
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Official github markdown badge
+
+When using babel for translations (not required)
+
+[![Babel-localisation](https://img.shields.io/badge/Babel-localisation-purple)](https://github.com/eonist/babel) 
+
+```markdown
+[![Babel-localisation](https://img.shields.io/badge/Babel-localisation-purple)](https://github.com/eonist/babel) 
+```
