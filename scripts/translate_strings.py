@@ -28,10 +28,10 @@ def main():
             print("Content to translate is empty.")
             sys.exit(1)
 
-        # Prepare OpenAI API
-        openai.api_key = os.getenv("OPENAI_API_KEY")
+        # Set the OpenAI API key
+        openai.api_key = os.environ.get("OPENAI_API_KEY")
         if not openai.api_key:
-            raise EnvironmentError("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
+            raise ValueError("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
         translations = {}
         total_tokens_used = 0
