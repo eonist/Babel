@@ -52,8 +52,8 @@ jobs:
     name: Run Unit Tests
     needs: write_content
     uses: ./.github/workflows/unit_test.yml
-    secrets:
-      GITHUB_TOKEN: inherit
+    ## secrets:
+      ## GITHUB_TOKEN: inherit
 
   notify_slack:
     name: Notify Slack
