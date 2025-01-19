@@ -45,7 +45,20 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      ## 2. Send notification to Slack
+      ## 2. Validate SLACK_WEBHOOK_URL without sending a message
+      - name: Validate SLACK_WEBHOOK_URL
+        run: |
+          response=$(curl -I -s "$SLACK_WEBHOOK_URL" | head -n 1 | cut -d$' ' -f2)
+          if [ "$response" -ne 200 ]; then
+            echo "::error::Invalid SLACK_WEBHOOK_URL. Received HTTP status code $response."
+            exit 1
+          else
+            echo "SLACK_WEBHOOK_URL is valid."
+          fi
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      ## 3. Send notification to Slack
       - name: Send Slack notification
         uses: 8398a7/action-slack@v3.16.2
         with:
