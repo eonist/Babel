@@ -50,7 +50,10 @@ jobs:
       - name: Validate SLACK_WEBHOOK_URL
         run: |
           response=$(curl -I -s "$SLACK_WEBHOOK_URL" | head -n 1 | cut -d$' ' -f2)
-          if [ "$response" -ne 200 ]; then
+          if ! [[ "$response" =~ ^[0-9]+$ ]]; then
+            echo "::error::Failed to retrieve a valid HTTP status code from SLACK_WEBHOOK_URL."
+            exit 1
+          elif [ "$response" -ne 200 ]; then
             echo "::error::Invalid SLACK_WEBHOOK_URL. Received HTTP status code $response."
             exit 1
           else
