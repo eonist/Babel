@@ -52,15 +52,15 @@ Babel automates the translation of your app's strings into multiple languages us
 
 ### Problem:
 
-- **Manual Translation is Tedious**: Translating `Localizable.strings` into multiple languages by hand is time-consuming.
-- **Prone to Errors**: Manual processes can lead to inefficiencies and mistakes.
-- **Developer Dependency**: Updates require developer involvement, limiting non-developers from managing translations.
+- 📝 **Manual Translation is Tedious**: Translating `Localizable.strings` into multiple languages by hand is time-consuming.
+- 🚨 **Prone to Errors**: Manual processes can lead to inefficiencies and mistakes.
+- 👨‍💻 **Developer Dependency**: Updates require developer involvement, limiting non-developers from managing translations.
 
 ### Solution:
 
-- **Automated AI Translations**: Utilize OpenAI's GPT models to automatically translate strings at scale.
-- **Integrated Testing & Notifications**: Include unit tests and receive Slack alerts upon completion or failure.
-- **Empower Non-Developers**: With Babel's forked repository, non-developers can edit and commit changes; Babel automates the rest, supporting automatic deployments if set up.
+- 🤖 **Automated AI Translations**: Utilize OpenAI's GPT models to automatically translate strings at scale.
+- 🧪 **Integrated Testing & Notifications**: Include unit tests and receive Slack alerts upon completion or failure.
+- 💪 **Empower Non-Developers**: With Babel's forked repository, non-developers can edit and commit changes; Babel automates the rest, supporting automatic deployments if set up.
 
 
 ### Prerequisites
