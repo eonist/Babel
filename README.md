@@ -230,7 +230,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Official GitHub Markdown Badge
 
-For extra points, be sure to add this sweet GitHub badge to your open-source projects using Babel for translations 😸
+A GitHub badge that can be added to your open-source projects 😸
 
 [![Babel-localisation](https://img.shields.io/badge/Babel-localisation-purple)](https://github.com/eonist/babel) 
 

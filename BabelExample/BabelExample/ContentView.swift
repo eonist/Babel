@@ -10,13 +10,13 @@ struct ContentView: View {
             print(NSLocalizedString("hello_world_key", bundle: frenchBundle, comment: ""))
          }
       }()
-      VStack {
+      VStack(alignment: .center) {
          Text("greeting_key", bundle: .babelModule) // use your babel translations
             .environment(\.locale, Locale(identifier: "es")) // shows English translation
          Text("hello_world_key".localized(bundle: localizationBundle(forLanguage: "de") ?? .babelModule))
          Text("farewell_key".localized(langCode: "fr")) // use your babel translations
       }
-      .padding()
+//      .padding()
    }
 }
 
@@ -24,3 +24,4 @@ struct ContentView: View {
 #Preview {
    ContentView()
 }
+ 
