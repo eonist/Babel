@@ -3,15 +3,31 @@ import Foundation
 import SwiftUI
 // Test that things work
 #Preview {
-   VStack(alignment: .center) {
+   @Previewable @State var index: Int = 0
+   @Previewable @State var lang: String = "English"
+   @Previewable @State var text: String = "hello_world_key".localized(langCode: "en")
+   VStack(alignment: .center, spacing: 12) {
       // hello_world_key farwell_key
       // es de fr en
-      RetroClockTicker(text: "farewell_key".localized(langCode: "es"))
-      Spacer().frame(height: 20)
-      Text("github.com/eonist/babel")
+//      RetroClockTicker(text: "farewell_key".localized(langCode: "fr"))
+//         .frame(height: 24)
+      Text(text)
+         .font(.system(size: 30, weight: .bold, design: .monospaced))
+         .contentTransition(.numericText())
+      Text(lang) // "github.com/eonist/babel"
          .font(.system(size: 20, weight: .bold, design: .monospaced))
          .foregroundStyle(.gray.opacity(0.5))
-      
+      Spacer().frame(height: 120)
+      Button.init("Random", action: {
+         let langCode = ["es","fr","de","en"]
+         let langArr = ["Spanish","French","German","English"]
+         lang = langArr[index]
+         withAnimation {
+            text = "hello_world_key".localized(langCode: langCode[index])
+            
+         }
+         index += 1
+      })
    }
 }
 

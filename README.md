@@ -35,7 +35,9 @@ Babel automates the translation of your app's strings into multiple languages us
 <img width="472" alt="img" src="https://i.imgur.com/muWodFY.gif?raw=true">
 
 **3. Translations go live in your app:**  
-<img width="287" alt="img" src="https://i.imgur.com/cEB5DJU.gif?raw=true">
+<img width="364" alt="img" src="https://i.imgur.com/RtZ5hsi.gif"> <!-- was: https://i.imgur.com/cEB5DJU.gif?raw=true -->
+
+
 
 ### Features:
 
